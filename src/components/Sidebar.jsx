@@ -1,93 +1,73 @@
 export default function Sidebar({ mode, timer, onStartOver }) {
   return (
     <aside style={{
-      width: '220px',
+      width: '200px',
       flexShrink: 0,
       background: '#ffffff',
-      borderRight: '1px solid var(--border)',
+      borderRight: '1px solid #e5e7eb',
       display: 'flex',
       flexDirection: 'column',
-      padding: '20px 16px',
-      gap: '20px',
+      padding: '24px 0',
     }}>
-      <div>
+      <div style={{ padding: '0 16px', marginBottom: 24 }}>
         <div style={{
           fontSize: '10px',
-          fontWeight: 700,
-          color: 'var(--text-muted)',
+          fontWeight: 600,
+          color: '#6b7280',
           letterSpacing: '0.8px',
           textTransform: 'uppercase',
           marginBottom: 8,
         }}>
-          Current Mode
+          Mode
         </div>
         <div style={{
-          padding: '8px 12px 8px 9px',
-          background: 'var(--violet-50)',
-          borderRadius: 'var(--radius-sm)',
-          border: '1px solid rgba(79,23,168,0.12)',
-          borderLeft: '3px solid var(--violet-500)',
+          paddingLeft: 10,
+          borderLeft: '2px solid #4F17A8',
+          fontSize: '13px',
+          color: '#4F17A8',
+          fontWeight: 500,
+          lineHeight: 1.4,
         }}>
-          <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--violet-500)' }}>{mode}</span>
+          {mode}
         </div>
       </div>
 
-      <div>
+      <div style={{ padding: '0 16px', marginBottom: 24 }}>
         <div style={{
           fontSize: '10px',
-          fontWeight: 700,
-          color: 'var(--text-muted)',
+          fontWeight: 600,
+          color: '#6b7280',
           letterSpacing: '0.8px',
           textTransform: 'uppercase',
           marginBottom: 8,
         }}>
-          Session Time
+          Session
         </div>
         <div style={{
-          padding: '8px 12px',
-          background: 'var(--aqua-50)',
-          borderRadius: 'var(--radius-sm)',
-          border: '1px solid rgba(5,191,224,0.2)',
           fontFamily: 'ui-monospace, monospace',
           fontSize: '20px',
-          fontWeight: 700,
-          color: 'var(--aqua-500)',
+          color: '#6b7280',
           letterSpacing: '1px',
         }}>
           {timer}
         </div>
       </div>
 
-      <div style={{ marginTop: 'auto' }}>
+      <div style={{ marginTop: 'auto', padding: '0 16px' }}>
         <button
           onClick={onStartOver}
           style={{
-            width: '100%',
-            padding: '10px 0',
-            borderRadius: 'var(--radius-sm)',
-            border: '1.5px solid var(--violet-500)',
-            background: 'transparent',
-            color: 'var(--violet-500)',
+            background: 'none',
+            border: 'none',
             fontSize: '13px',
-            fontWeight: 600,
-            transition: 'all 0.15s',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 6,
+            color: '#6b7280',
+            cursor: 'pointer',
+            padding: 0,
           }}
-          onMouseEnter={e => {
-            e.currentTarget.style.background = 'var(--violet-50)';
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.background = 'transparent';
-          }}
+          onMouseEnter={e => e.currentTarget.style.color = '#200F3B'}
+          onMouseLeave={e => e.currentTarget.style.color = '#6b7280'}
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="1 4 1 10 7 10" />
-            <path d="M3.51 15a9 9 0 1 0 .49-3.5" />
-          </svg>
-          Start Over
+          Start over
         </button>
       </div>
     </aside>

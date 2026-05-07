@@ -5,44 +5,12 @@
 }
 
 :root {
-  /* PMI Official Palette */
-  --violet-50: #EFEDF3;
-  --violet-300: #B465FF;
-  --violet-500: #4F17A8;
-  --violet-800: #200F3B;
-  --aqua-50: #EEFAFA;
-  --aqua-300: #05BFE0;
-  --aqua-500: #00799E;
-  --tangerine-50: #FEF7F3;
-  --tangerine-300: #FF610F;
-
-  /* Aliases kept for compatibility */
-  --tangerine: #FF610F;
-  --tangerine-light: #FEF7F3;
-  --tangerine-dark: #d94e00;
-  --aqua: #05BFE0;
-  --aqua-light: #EEFAFA;
-  --aqua-dark: #00799E;
   --violet: #4F17A8;
-  --violet-light: #EFEDF3;
-
-  /* Neutrals */
-  --bg: #ffffff;
-  --surface: #ffffff;
   --border: #e5e7eb;
   --text: #200F3B;
-  --text-secondary: #5a4d6e;
-  --text-muted: #9b8fb0;
-
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(32,15,59,0.07);
-  --shadow: 0 4px 12px rgba(32,15,59,0.09);
-  --shadow-lg: 0 8px 24px rgba(32,15,59,0.12);
-
-  /* Radius */
-  --radius: 12px;
-  --radius-sm: 8px;
-  --radius-lg: 16px;
+  --text-secondary: #6b7280;
+  --radius: 8px;
+  --radius-sm: 6px;
 }
 
 html, body, #root {
@@ -51,8 +19,8 @@ html, body, #root {
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: #ffffff;
-  color: var(--text);
+  background: #f9fafb;
+  color: #200F3B;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
@@ -95,6 +63,7 @@ input, textarea {
   padding: 24px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
+  background: #ffffff;
 }
 
 .flashcard-face.back {
@@ -113,7 +82,7 @@ input, textarea {
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+  background: #9ca3af;
 }
 
 /* Typing dots */
@@ -130,25 +99,20 @@ input, textarea {
 
 /* Message fade-in */
 @keyframes msgIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 .msg-enter {
-  animation: msgIn 0.25s ease forwards;
+  animation: msgIn 0.2s ease forwards;
 }
 
 /* Follow-up chip hover */
 .chip:hover {
-  background: var(--violet-50) !important;
-  border-color: var(--violet-500) !important;
-  color: var(--violet-500) !important;
+  background: #f9fafb !important;
 }
 
 /* Starter card hover */
 .starter-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-  background: var(--violet-50) !important;
-  border-color: var(--violet-500) !important;
+  background: #f9fafb !important;
 }

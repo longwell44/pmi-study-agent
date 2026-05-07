@@ -1,43 +1,40 @@
 export default function TypingIndicator() {
   return (
-    <div className="msg-enter" style={{ display: 'flex', alignItems: 'flex-end', gap: 10, padding: '4px 0' }}>
+    <div className="msg-enter" style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '2px 0' }}>
       <div style={{
-        width: 32,
-        height: 32,
+        width: 28,
+        height: 28,
         borderRadius: '50%',
-        background: 'var(--aqua-300)',
+        background: '#e5e7eb',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: 13,
-        fontWeight: 700,
-        color: '#fff',
+        fontSize: 11,
+        fontWeight: 600,
+        color: '#6b7280',
         flexShrink: 0,
+        marginTop: 2,
       }}>
         P
       </div>
       <div style={{
-        background: 'var(--aqua-50)',
-        borderTop: '1px solid var(--border)',
-        borderRight: '1px solid var(--border)',
-        borderBottom: '1px solid var(--border)',
-        borderLeft: '3px solid var(--aqua-300)',
-        borderRadius: '0 var(--radius) var(--radius) var(--radius)',
-        padding: '14px 18px',
+        background: '#ffffff',
+        border: '1px solid #e5e7eb',
+        borderRadius: '4px 12px 12px 12px',
+        padding: '12px 16px',
         display: 'flex',
         gap: 5,
         alignItems: 'center',
-        boxShadow: 'var(--shadow-sm)',
       }}>
         {[0, 1, 2].map((i) => (
           <div
             key={i}
             className="typing-dot"
             style={{
-              width: 7,
-              height: 7,
+              width: 6,
+              height: 6,
               borderRadius: '50%',
-              background: 'var(--aqua-300)',
+              background: '#9ca3af',
               animationDelay: `${i * 0.2}s`,
             }}
           />

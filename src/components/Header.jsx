@@ -1,73 +1,42 @@
 export default function Header({ timer }) {
   return (
     <header style={{
-      background: 'var(--violet-500)',
-      borderBottom: '3px solid var(--tangerine-300)',
+      background: '#ffffff',
+      borderBottom: '1px solid #e5e7eb',
       padding: '0 24px',
-      height: '64px',
+      height: '56px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       flexShrink: 0,
       zIndex: 10,
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+      <div>
         <div style={{
-          width: 38,
-          height: 38,
-          borderRadius: '50%',
-          background: 'rgba(255,255,255,0.18)',
-          border: '1.5px solid rgba(255,255,255,0.3)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 18,
-          fontWeight: 700,
-          color: '#fff',
-          letterSpacing: '-0.5px',
-          flexShrink: 0,
+          color: '#200F3B',
+          fontWeight: 500,
+          fontSize: '15px',
+          lineHeight: 1.2,
         }}>
-          P
+          PMI Study Assistant
         </div>
-        <div>
-          <div style={{
-            color: '#FFFFFF',
-            fontWeight: 700,
-            fontSize: '17px',
-            letterSpacing: '-0.3px',
-            lineHeight: 1.2,
-          }}>
-            PMI Study Assistant
-          </div>
-          <div style={{
-            color: 'rgba(239,237,243,0.70)',
-            fontSize: '11px',
-            letterSpacing: '0.3px',
-            fontWeight: 500,
-          }}>
-            Research Prototype · Not an official PMI product
-          </div>
+        <div style={{
+          color: '#6b7280',
+          fontSize: '11px',
+          marginTop: 2,
+        }}>
+          Research Prototype · Not an official PMI product
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <div style={{
-          width: 8,
-          height: 8,
-          borderRadius: '50%',
-          background: 'var(--aqua-300)',
-          boxShadow: '0 0 6px var(--aqua-300)',
-        }} />
-        <span style={{
-          color: 'var(--aqua-300)',
-          fontSize: '13px',
-          fontVariantNumeric: 'tabular-nums',
-          fontWeight: 600,
-          fontFamily: 'ui-monospace, monospace',
-        }}>
-          {timer}
-        </span>
-      </div>
+      <span style={{
+        color: '#6b7280',
+        fontSize: '13px',
+        fontVariantNumeric: 'tabular-nums',
+        fontFamily: 'ui-monospace, monospace',
+      }}>
+        {timer}
+      </span>
     </header>
   );
 }

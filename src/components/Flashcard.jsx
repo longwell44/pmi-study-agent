@@ -13,24 +13,33 @@ export default function Flashcard({ cards }) {
     setTimeout(() => setIndex((i) => (i + dir + cards.length) % cards.length), 200);
   };
 
+  const navBtnStyle = {
+    padding: '5px 14px',
+    borderRadius: '6px',
+    border: '1px solid #e5e7eb',
+    background: '#ffffff',
+    fontSize: '13px',
+    color: '#6b7280',
+    transition: 'background 0.15s',
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <span style={{
           display: 'inline-flex',
-          padding: '3px 10px',
-          borderRadius: 20,
-          background: 'var(--aqua-50)',
-          color: 'var(--aqua-500)',
+          padding: '2px 8px',
+          borderRadius: '20px',
+          background: '#f3f4f6',
+          color: '#6b7280',
           fontSize: '11px',
-          fontWeight: 700,
-          letterSpacing: '0.3px',
-          border: '1px solid rgba(5,191,224,0.2)',
+          fontWeight: 500,
+          border: '1px solid #e5e7eb',
         }}>
           Flashcards · {cards.length} card{cards.length !== 1 ? 's' : ''}
         </span>
         {cards.length > 1 && (
-          <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 500 }}>
+          <span style={{ fontSize: '12px', color: '#9ca3af' }}>
             {index + 1} / {cards.length}
           </span>
         )}
@@ -38,19 +47,16 @@ export default function Flashcard({ cards }) {
 
       <div
         className="flashcard-scene"
-        style={{ width: '100%', height: 200, cursor: 'pointer' }}
+        style={{ width: '100%', height: 190, cursor: 'pointer' }}
         onClick={() => setFlipped((f) => !f)}
         title="Click to flip"
       >
         <div className={`flashcard-card${flipped ? ' flipped' : ''}`} style={{ width: '100%', height: '100%' }}>
-          <div className="flashcard-face" style={{
-            background: '#ffffff',
-            borderTop: '3px solid var(--aqua-300)',
-          }}>
+          <div className="flashcard-face">
             <div style={{
               fontSize: '10px',
-              fontWeight: 700,
-              color: 'var(--aqua-300)',
+              fontWeight: 600,
+              color: '#9ca3af',
               letterSpacing: '0.8px',
               textTransform: 'uppercase',
               marginBottom: 12,
@@ -60,25 +66,22 @@ export default function Flashcard({ cards }) {
             <p style={{
               fontSize: '15px',
               fontWeight: 600,
-              color: 'var(--violet-800)',
+              color: '#200F3B',
               textAlign: 'center',
               lineHeight: 1.5,
             }}>
               {card.front}
             </p>
-            <div style={{ marginTop: 16, fontSize: '11px', color: 'var(--text-muted)' }}>
-              Click to reveal answer
+            <div style={{ marginTop: 14, fontSize: '11px', color: '#9ca3af' }}>
+              Click to reveal
             </div>
           </div>
 
-          <div className="flashcard-face back" style={{
-            background: '#ffffff',
-            borderTop: '3px solid var(--violet-500)',
-          }}>
+          <div className="flashcard-face back">
             <div style={{
               fontSize: '10px',
-              fontWeight: 700,
-              color: 'var(--violet-500)',
+              fontWeight: 600,
+              color: '#9ca3af',
               letterSpacing: '0.8px',
               textTransform: 'uppercase',
               marginBottom: 12,
@@ -87,7 +90,7 @@ export default function Flashcard({ cards }) {
             </div>
             <p style={{
               fontSize: '14px',
-              color: 'var(--violet-800)',
+              color: '#200F3B',
               textAlign: 'center',
               lineHeight: 1.6,
             }}>
@@ -98,40 +101,25 @@ export default function Flashcard({ cards }) {
       </div>
 
       {cards.length > 1 && (
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 10, alignItems: 'center' }}>
           <button
             onClick={() => navigate(-1)}
-            style={{
-              padding: '6px 16px',
-              borderRadius: 'var(--radius-sm)',
-              border: '1.5px solid var(--border)',
-              background: '#ffffff',
-              fontSize: '13px',
-              fontWeight: 600,
-              color: 'var(--text-secondary)',
-              transition: 'all 0.15s',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.borderColor = 'var(--aqua-300)';
-              e.currentTarget.style.color = 'var(--aqua-500)';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.borderColor = 'var(--border)';
-              e.currentTarget.style.color = 'var(--text-secondary)';
-            }}
+            style={navBtnStyle}
+            onMouseEnter={e => e.currentTarget.style.background = '#f9fafb'}
+            onMouseLeave={e => e.currentTarget.style.background = '#ffffff'}
           >
             ← Prev
           </button>
-          <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
             {cards.map((_, i) => (
               <button
                 key={i}
                 onClick={() => { setFlipped(false); setIndex(i); }}
                 style={{
-                  width: i === index ? 18 : 7,
-                  height: 7,
-                  borderRadius: 4,
-                  background: i === index ? 'var(--aqua-300)' : 'var(--border)',
+                  width: i === index ? 16 : 6,
+                  height: 6,
+                  borderRadius: 3,
+                  background: i === index ? '#6b7280' : '#d1d5db',
                   transition: 'all 0.2s',
                   border: 'none',
                 }}
@@ -140,24 +128,9 @@ export default function Flashcard({ cards }) {
           </div>
           <button
             onClick={() => navigate(1)}
-            style={{
-              padding: '6px 16px',
-              borderRadius: 'var(--radius-sm)',
-              border: '1.5px solid var(--border)',
-              background: '#ffffff',
-              fontSize: '13px',
-              fontWeight: 600,
-              color: 'var(--text-secondary)',
-              transition: 'all 0.15s',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.borderColor = 'var(--aqua-300)';
-              e.currentTarget.style.color = 'var(--aqua-500)';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.borderColor = 'var(--border)';
-              e.currentTarget.style.color = 'var(--text-secondary)';
-            }}
+            style={navBtnStyle}
+            onMouseEnter={e => e.currentTarget.style.background = '#f9fafb'}
+            onMouseLeave={e => e.currentTarget.style.background = '#ffffff'}
           >
             Next →
           </button>

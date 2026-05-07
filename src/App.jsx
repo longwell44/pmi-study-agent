@@ -103,7 +103,7 @@ export default function App() {
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          background: '#ffffff',
+          background: '#f9fafb',
         }}>
           {screen === 'welcome' ? (
             <>
@@ -115,10 +115,10 @@ export default function App() {
               <div style={{
                 flex: 1,
                 overflowY: 'auto',
-                padding: '20px 24px',
+                padding: '24px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 16,
+                gap: 12,
               }}>
                 {messages.map((msg) => (
                   <ChatMessage key={msg.id} message={msg} onChipSelect={handleSend} />
@@ -126,12 +126,11 @@ export default function App() {
                 {isTyping && <TypingIndicator />}
                 {error && (
                   <div style={{
-                    padding: '12px 16px',
+                    padding: '10px 14px',
                     background: '#fef2f2',
-                    border: '1px solid #fca5a5',
-                    borderLeft: '3px solid #f87171',
-                    borderRadius: 'var(--radius-sm)',
-                    color: '#b91c1c',
+                    border: '1px solid #dc2626',
+                    borderRadius: '6px',
+                    color: '#dc2626',
                     fontSize: '13px',
                   }}>
                     Error: {error}. Check that your API key is set in <code>.env</code>.

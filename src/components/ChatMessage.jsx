@@ -2,6 +2,20 @@ import PracticeQuestion from './PracticeQuestion.jsx';
 import Flashcard from './Flashcard.jsx';
 import FollowUpChips from './FollowUpChips.jsx';
 
+const avatarStyle = {
+  width: 28,
+  height: 28,
+  borderRadius: '50%',
+  background: '#e5e7eb',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: 11,
+  fontWeight: 600,
+  color: '#6b7280',
+  flexShrink: 0,
+};
+
 function renderText(text) {
   if (!text) return null;
   const lines = text.split('\n');
@@ -29,73 +43,36 @@ export default function ChatMessage({ message, onChipSelect }) {
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
         gap: 8,
-        padding: '4px 0',
+        padding: '2px 0',
       }}>
         <div style={{
           maxWidth: '70%',
-          padding: '12px 16px',
-          borderRadius: 'var(--radius) var(--radius) 4px var(--radius)',
-          background: 'var(--tangerine-50)',
-          borderTop: '1px solid rgba(255,97,15,0.12)',
-          borderBottom: '1px solid rgba(255,97,15,0.12)',
-          borderLeft: '1px solid rgba(255,97,15,0.12)',
-          borderRight: '3px solid var(--tangerine-300)',
-          color: 'var(--violet-800)',
+          padding: '10px 14px',
+          borderRadius: '12px 12px 4px 12px',
+          background: '#f3f4f6',
+          color: '#200F3B',
           fontSize: '14px',
           lineHeight: 1.6,
         }}>
           {parsed.text}
         </div>
-        <div style={{
-          width: 32,
-          height: 32,
-          borderRadius: '50%',
-          background: 'var(--violet-500)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 12,
-          fontWeight: 700,
-          color: '#fff',
-          flexShrink: 0,
-        }}>
-          U
-        </div>
+        <div style={avatarStyle}>U</div>
       </div>
     );
   }
 
   return (
-    <div className="msg-enter" style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '4px 0' }}>
-      <div style={{
-        width: 32,
-        height: 32,
-        borderRadius: '50%',
-        background: 'var(--aqua-300)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: 13,
-        fontWeight: 700,
-        color: '#fff',
-        flexShrink: 0,
-        marginTop: 2,
-      }}>
-        P
-      </div>
+    <div className="msg-enter" style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '2px 0' }}>
+      <div style={{ ...avatarStyle, marginTop: 2 }}>P</div>
 
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
-          background: 'var(--aqua-50)',
-          borderTop: '1px solid var(--border)',
-          borderRight: '1px solid var(--border)',
-          borderBottom: '1px solid var(--border)',
-          borderLeft: '3px solid var(--aqua-300)',
-          borderRadius: '0 var(--radius) var(--radius) var(--radius)',
-          padding: '14px 18px',
-          boxShadow: 'var(--shadow-sm)',
+          background: '#ffffff',
+          border: '1px solid #e5e7eb',
+          borderRadius: '4px 12px 12px 12px',
+          padding: '14px 16px',
           fontSize: '14px',
-          color: 'var(--violet-800)',
+          color: '#200F3B',
           lineHeight: 1.6,
         }}>
           {parsed.text && (

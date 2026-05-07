@@ -25,25 +25,28 @@ export default function MessageInput({ onSend, disabled }) {
     }
   };
 
+  const hasContent = value.trim() && !disabled;
+
   return (
     <div style={{
       padding: '12px 20px 16px',
       background: '#ffffff',
-      borderTop: '1px solid var(--border)',
+      borderTop: '1px solid #e5e7eb',
       flexShrink: 0,
     }}>
-      <div style={{
-        display: 'flex',
-        alignItems: 'flex-end',
-        gap: 10,
-        background: '#ffffff',
-        border: '1.5px solid var(--border)',
-        borderRadius: 'var(--radius)',
-        padding: '8px 8px 8px 16px',
-        transition: 'border-color 0.15s',
-      }}
-        onFocusCapture={e => e.currentTarget.style.borderColor = 'var(--violet-500)'}
-        onBlurCapture={e => e.currentTarget.style.borderColor = 'var(--border)'}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-end',
+          gap: 10,
+          background: '#ffffff',
+          border: '1px solid #e5e7eb',
+          borderRadius: '8px',
+          padding: '8px 8px 8px 14px',
+          transition: 'border-color 0.15s',
+        }}
+        onFocusCapture={e => e.currentTarget.style.borderColor = '#4F17A8'}
+        onBlurCapture={e => e.currentTarget.style.borderColor = '#e5e7eb'}
       >
         <textarea
           ref={textareaRef}
@@ -59,7 +62,7 @@ export default function MessageInput({ onSend, disabled }) {
             border: 'none',
             background: 'transparent',
             fontSize: '14px',
-            color: 'var(--violet-800)',
+            color: '#200F3B',
             outline: 'none',
             lineHeight: 1.6,
             overflowY: 'auto',
@@ -69,27 +72,26 @@ export default function MessageInput({ onSend, disabled }) {
         />
         <button
           onClick={submit}
-          disabled={!value.trim() || disabled}
+          disabled={!hasContent}
           style={{
-            width: 36,
-            height: 36,
-            borderRadius: 10,
-            background: !value.trim() || disabled ? 'var(--border)' : 'var(--aqua-300)',
+            width: 34,
+            height: 34,
+            borderRadius: '6px',
+            background: hasContent ? '#4F17A8' : '#d1d5db',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            transition: 'all 0.2s',
+            transition: 'background 0.15s',
             flexShrink: 0,
-            boxShadow: !value.trim() || disabled ? 'none' : '0 2px 8px rgba(5,191,224,0.35)',
           }}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <line x1="22" y1="2" x2="11" y2="13" />
             <polygon points="22 2 15 22 11 13 2 9 22 2" />
           </svg>
         </button>
       </div>
-      <div style={{ textAlign: 'center', marginTop: 8, fontSize: '11px', color: 'var(--text-muted)' }}>
+      <div style={{ textAlign: 'center', marginTop: 7, fontSize: '11px', color: '#9ca3af' }}>
         Enter to send · Shift+Enter for new line
       </div>
     </div>

@@ -1,34 +1,60 @@
-const ICON_PALETTES = [
-  { bg: 'var(--aqua-50)',      icon: 'var(--aqua-300)'      },
-  { bg: 'var(--violet-50)',    icon: 'var(--violet-300)'    },
-  { bg: 'var(--tangerine-50)', icon: 'var(--tangerine-300)' },
-  { bg: 'var(--aqua-50)',      icon: 'var(--aqua-300)'      },
-  { bg: 'var(--violet-50)',    icon: 'var(--violet-300)'    },
-];
-
 const CARDS = [
   {
-    icon: '📝',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+        <rect x="9" y="3" width="6" height="4" rx="1"/>
+        <path d="M9 12h6M9 16h4"/>
+      </svg>
+    ),
     label: 'Give me a practice question',
     description: 'Test your knowledge with a realistic PMP-style question',
   },
   {
-    icon: '🗂️',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="7" width="20" height="14" rx="2"/>
+        <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
+        <line x1="12" y1="12" x2="12" y2="16"/>
+        <line x1="10" y1="14" x2="14" y2="14"/>
+      </svg>
+    ),
     label: 'Generate flashcards for a topic',
     description: 'Create study cards for any PMBOK concept or domain',
   },
   {
-    icon: '📖',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+      </svg>
+    ),
     label: 'Explain a PMBOK concept',
     description: 'Deep dives into frameworks, principles, and performance domains',
   },
   {
-    icon: '🗓️',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+    ),
     label: 'Help me build a study plan',
     description: 'Get a personalized roadmap to PMP exam readiness',
   },
   {
-    icon: '🎯',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <circle cx="12" cy="12" r="3"/>
+        <line x1="12" y1="2" x2="12" y2="5"/>
+        <line x1="12" y1="19" x2="12" y2="22"/>
+        <line x1="2" y1="12" x2="5" y2="12"/>
+        <line x1="19" y1="12" x2="22" y2="12"/>
+      </svg>
+    ),
     label: 'How is the PMP exam structured?',
     description: 'Learn the ECO domains, question types, and format',
   },
@@ -43,96 +69,72 @@ export default function StarterCards({ onSelect }) {
       alignItems: 'center',
       justifyContent: 'center',
       padding: '40px 24px',
-      gap: '32px',
-      background: '#ffffff',
+      gap: '28px',
     }}>
-      <div style={{ textAlign: 'center', maxWidth: 560 }}>
-        <div style={{
-          width: 64,
-          height: 64,
-          borderRadius: '50%',
-          background: 'var(--violet-500)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 28,
-          fontWeight: 800,
-          color: '#fff',
-          margin: '0 auto 20px',
-          boxShadow: '0 4px 16px rgba(79,23,168,0.3)',
-        }}>
-          P
-        </div>
+      <div style={{ textAlign: 'center', maxWidth: 480 }}>
         <h1 style={{
-          fontSize: '26px',
-          fontWeight: 800,
-          color: 'var(--violet-800)',
-          letterSpacing: '-0.5px',
-          marginBottom: 10,
+          fontSize: '22px',
+          fontWeight: 600,
+          color: '#200F3B',
+          letterSpacing: '-0.3px',
+          marginBottom: 8,
         }}>
           Ready to ace the PMP?
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.6 }}>
-          Your AI study partner is here. Choose where to start, or type your own question below.
+        <p style={{ color: '#6b7280', fontSize: '14px', lineHeight: 1.6 }}>
+          Choose where to start, or type your own question below.
         </p>
       </div>
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-        gap: '14px',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+        gap: '12px',
         width: '100%',
         maxWidth: 820,
       }}>
-        {CARDS.map((card, i) => {
-          const palette = ICON_PALETTES[i % ICON_PALETTES.length];
-          return (
-            <button
-              key={card.label}
-              className="starter-card"
-              onClick={() => onSelect(card.label)}
-              style={{
-                background: '#ffffff',
-                border: '1.5px solid var(--border)',
-                borderRadius: 'var(--radius)',
-                padding: '20px 18px',
-                textAlign: 'left',
-                transition: 'all 0.2s ease',
-                boxShadow: 'var(--shadow-sm)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 10,
-              }}
-            >
+        {CARDS.map((card) => (
+          <button
+            key={card.label}
+            className="starter-card"
+            onClick={() => onSelect(card.label)}
+            style={{
+              background: '#ffffff',
+              border: '1px solid #e5e7eb',
+              borderRadius: '8px',
+              padding: '18px 16px',
+              textAlign: 'left',
+              transition: 'background 0.15s',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 10,
+            }}
+          >
+            <div style={{
+              width: 32,
+              height: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              {card.icon}
+            </div>
+            <div>
               <div style={{
-                width: 40,
-                height: 40,
-                borderRadius: 10,
-                background: palette.bg,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 20,
+                fontSize: '13px',
+                fontWeight: 600,
+                color: '#200F3B',
+                marginBottom: 3,
+                lineHeight: 1.3,
               }}>
-                {card.icon}
+                {card.label}
               </div>
-              <div>
-                <div style={{
-                  fontSize: '14px',
-                  fontWeight: 700,
-                  color: 'var(--violet-800)',
-                  marginBottom: 4,
-                  lineHeight: 1.3,
-                }}>
-                  {card.label}
-                </div>
-                <div style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                  {card.description}
-                </div>
+              <div style={{ fontSize: '12px', color: '#6b7280', lineHeight: 1.5 }}>
+                {card.description}
               </div>
-            </button>
-          );
-        })}
+            </div>
+          </button>
+        ))}
       </div>
     </div>
   );
