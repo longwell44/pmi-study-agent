@@ -20,8 +20,8 @@ export default function Flashcard({ cards }) {
           display: 'inline-flex',
           padding: '3px 10px',
           borderRadius: 20,
-          background: 'var(--aqua-light)',
-          color: 'var(--aqua-dark)',
+          background: 'var(--aqua-50)',
+          color: 'var(--aqua-500)',
           fontSize: '11px',
           fontWeight: 700,
           letterSpacing: '0.3px',
@@ -43,11 +43,27 @@ export default function Flashcard({ cards }) {
         title="Click to flip"
       >
         <div className={`flashcard-card${flipped ? ' flipped' : ''}`} style={{ width: '100%', height: '100%' }}>
-          <div className="flashcard-face" style={{ background: 'var(--aqua-light)' }}>
-            <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--aqua-dark)', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: 12 }}>
+          <div className="flashcard-face" style={{
+            background: '#ffffff',
+            borderTop: '3px solid var(--aqua-300)',
+          }}>
+            <div style={{
+              fontSize: '10px',
+              fontWeight: 700,
+              color: 'var(--aqua-300)',
+              letterSpacing: '0.8px',
+              textTransform: 'uppercase',
+              marginBottom: 12,
+            }}>
               FRONT
             </div>
-            <p style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text)', textAlign: 'center', lineHeight: 1.5 }}>
+            <p style={{
+              fontSize: '15px',
+              fontWeight: 600,
+              color: 'var(--violet-800)',
+              textAlign: 'center',
+              lineHeight: 1.5,
+            }}>
               {card.front}
             </p>
             <div style={{ marginTop: 16, fontSize: '11px', color: 'var(--text-muted)' }}>
@@ -55,11 +71,26 @@ export default function Flashcard({ cards }) {
             </div>
           </div>
 
-          <div className="flashcard-face back" style={{ background: 'var(--violet-light)' }}>
-            <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--violet)', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: 12 }}>
+          <div className="flashcard-face back" style={{
+            background: '#ffffff',
+            borderTop: '3px solid var(--violet-500)',
+          }}>
+            <div style={{
+              fontSize: '10px',
+              fontWeight: 700,
+              color: 'var(--violet-500)',
+              letterSpacing: '0.8px',
+              textTransform: 'uppercase',
+              marginBottom: 12,
+            }}>
               BACK
             </div>
-            <p style={{ fontSize: '14px', color: 'var(--text)', textAlign: 'center', lineHeight: 1.6 }}>
+            <p style={{
+              fontSize: '14px',
+              color: 'var(--violet-800)',
+              textAlign: 'center',
+              lineHeight: 1.6,
+            }}>
               {card.back}
             </p>
           </div>
@@ -74,14 +105,20 @@ export default function Flashcard({ cards }) {
               padding: '6px 16px',
               borderRadius: 'var(--radius-sm)',
               border: '1.5px solid var(--border)',
-              background: 'var(--surface)',
+              background: '#ffffff',
               fontSize: '13px',
               fontWeight: 600,
               color: 'var(--text-secondary)',
               transition: 'all 0.15s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--aqua)'; e.currentTarget.style.color = 'var(--aqua-dark)'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = 'var(--aqua-300)';
+              e.currentTarget.style.color = 'var(--aqua-500)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = 'var(--border)';
+              e.currentTarget.style.color = 'var(--text-secondary)';
+            }}
           >
             ← Prev
           </button>
@@ -94,7 +131,7 @@ export default function Flashcard({ cards }) {
                   width: i === index ? 18 : 7,
                   height: 7,
                   borderRadius: 4,
-                  background: i === index ? 'var(--aqua)' : 'var(--border)',
+                  background: i === index ? 'var(--aqua-300)' : 'var(--border)',
                   transition: 'all 0.2s',
                   border: 'none',
                 }}
@@ -107,14 +144,20 @@ export default function Flashcard({ cards }) {
               padding: '6px 16px',
               borderRadius: 'var(--radius-sm)',
               border: '1.5px solid var(--border)',
-              background: 'var(--surface)',
+              background: '#ffffff',
               fontSize: '13px',
               fontWeight: 600,
               color: 'var(--text-secondary)',
               transition: 'all 0.15s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--aqua)'; e.currentTarget.style.color = 'var(--aqua-dark)'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = 'var(--aqua-300)';
+              e.currentTarget.style.color = 'var(--aqua-500)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = 'var(--border)';
+              e.currentTarget.style.color = 'var(--text-secondary)';
+            }}
           >
             Next →
           </button>

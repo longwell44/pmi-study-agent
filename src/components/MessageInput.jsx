@@ -28,7 +28,7 @@ export default function MessageInput({ onSend, disabled }) {
   return (
     <div style={{
       padding: '12px 20px 16px',
-      background: 'var(--surface)',
+      background: '#ffffff',
       borderTop: '1px solid var(--border)',
       flexShrink: 0,
     }}>
@@ -36,13 +36,13 @@ export default function MessageInput({ onSend, disabled }) {
         display: 'flex',
         alignItems: 'flex-end',
         gap: 10,
-        background: 'var(--bg)',
+        background: '#ffffff',
         border: '1.5px solid var(--border)',
         borderRadius: 'var(--radius)',
         padding: '8px 8px 8px 16px',
         transition: 'border-color 0.15s',
       }}
-        onFocusCapture={e => e.currentTarget.style.borderColor = 'var(--tangerine)'}
+        onFocusCapture={e => e.currentTarget.style.borderColor = 'var(--violet-500)'}
         onBlurCapture={e => e.currentTarget.style.borderColor = 'var(--border)'}
       >
         <textarea
@@ -59,7 +59,7 @@ export default function MessageInput({ onSend, disabled }) {
             border: 'none',
             background: 'transparent',
             fontSize: '14px',
-            color: 'var(--text)',
+            color: 'var(--violet-800)',
             outline: 'none',
             lineHeight: 1.6,
             overflowY: 'auto',
@@ -74,15 +74,13 @@ export default function MessageInput({ onSend, disabled }) {
             width: 36,
             height: 36,
             borderRadius: 10,
-            background: !value.trim() || disabled
-              ? 'var(--border)'
-              : 'linear-gradient(135deg, var(--tangerine) 0%, var(--tangerine-dark) 100%)',
+            background: !value.trim() || disabled ? 'var(--border)' : 'var(--aqua-300)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             transition: 'all 0.2s',
             flexShrink: 0,
-            boxShadow: !value.trim() || disabled ? 'none' : '0 2px 8px rgba(245,130,31,0.3)',
+            boxShadow: !value.trim() || disabled ? 'none' : '0 2px 8px rgba(5,191,224,0.35)',
           }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

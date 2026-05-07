@@ -1,8 +1,8 @@
 export default function Header({ timer }) {
   return (
     <header style={{
-      background: 'var(--violet)',
-      borderBottom: '3px solid var(--tangerine)',
+      background: 'var(--violet-500)',
+      borderBottom: '3px solid var(--tangerine-300)',
       padding: '0 24px',
       height: '64px',
       display: 'flex',
@@ -40,7 +40,7 @@ export default function Header({ timer }) {
             PMI Study Assistant
           </div>
           <div style={{
-            color: 'rgba(255,255,255,0.45)',
+            color: 'rgba(239,237,243,0.70)',
             fontSize: '11px',
             letterSpacing: '0.3px',
             fontWeight: 500,
@@ -55,14 +55,14 @@ export default function Header({ timer }) {
           width: 8,
           height: 8,
           borderRadius: '50%',
-          background: 'var(--aqua)',
-          boxShadow: '0 0 6px var(--aqua)',
+          background: 'var(--aqua-300)',
+          boxShadow: '0 0 6px var(--aqua-300)',
         }} />
         <span style={{
-          color: 'rgba(255,255,255,0.7)',
+          color: 'var(--aqua-300)',
           fontSize: '13px',
           fontVariantNumeric: 'tabular-nums',
-          fontWeight: 500,
+          fontWeight: 600,
           fontFamily: 'ui-monospace, monospace',
         }}>
           {timer}

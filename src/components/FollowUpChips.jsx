@@ -10,11 +10,11 @@ export default function FollowUpChips({ suggestions, onSelect }) {
           style={{
             padding: '6px 14px',
             borderRadius: 20,
-            border: '1.5px solid var(--border)',
-            background: 'var(--surface)',
+            border: '1.5px solid var(--violet-50)',
+            background: '#ffffff',
             fontSize: '12px',
             fontWeight: 600,
-            color: 'var(--text-secondary)',
+            color: 'var(--violet-500)',
             transition: 'all 0.15s',
             whiteSpace: 'nowrap',
           }}

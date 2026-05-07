@@ -5,7 +5,7 @@ export default function TypingIndicator() {
         width: 32,
         height: 32,
         borderRadius: '50%',
-        background: 'var(--violet)',
+        background: 'var(--aqua-300)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -17,8 +17,11 @@ export default function TypingIndicator() {
         P
       </div>
       <div style={{
-        background: 'var(--surface)',
-        border: '1px solid var(--border)',
+        background: 'var(--aqua-50)',
+        borderTop: '1px solid var(--border)',
+        borderRight: '1px solid var(--border)',
+        borderBottom: '1px solid var(--border)',
+        borderLeft: '3px solid var(--aqua-300)',
         borderRadius: '0 var(--radius) var(--radius) var(--radius)',
         padding: '14px 18px',
         display: 'flex',
@@ -34,7 +37,7 @@ export default function TypingIndicator() {
               width: 7,
               height: 7,
               borderRadius: '50%',
-              background: 'var(--text-muted)',
+              background: 'var(--aqua-300)',
               animationDelay: `${i * 0.2}s`,
             }}
           />

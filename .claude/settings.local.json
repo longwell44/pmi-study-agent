@@ -3,7 +3,9 @@
     "allow": [
       "Bash(npm install *)",
       "Bash(sudo npm cache clean --force)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(grep -v \"^\\\\.\\\\.$\")",
+      "Bash(git add *)"
     ]
   }
 }

@@ -17,10 +17,10 @@ export default function PracticeQuestion({ data }) {
       padding: '12px 16px',
       borderRadius: 'var(--radius-sm)',
       border: '1.5px solid var(--border)',
-      background: 'var(--surface)',
+      background: '#ffffff',
       textAlign: 'left',
       fontSize: '14px',
-      color: 'var(--text)',
+      color: 'var(--violet-800)',
       display: 'flex',
       gap: 12,
       alignItems: 'flex-start',
@@ -29,14 +29,12 @@ export default function PracticeQuestion({ data }) {
       lineHeight: 1.5,
     };
 
-    if (!selected) {
-      return { ...base };
-    }
+    if (!selected) return { ...base };
     if (key === correct) {
-      return { ...base, background: '#E8F5E9', borderColor: '#4CAF50', color: '#1B5E20' };
+      return { ...base, background: 'var(--aqua-50)', borderColor: 'var(--aqua-500)', color: 'var(--aqua-500)' };
     }
     if (key === selected) {
-      return { ...base, background: '#FFEBEE', borderColor: '#F44336', color: '#B71C1C' };
+      return { ...base, background: '#fef2f2', borderColor: '#f87171', color: '#b91c1c' };
     }
     return { ...base, opacity: 0.45 };
   };
@@ -54,10 +52,10 @@ export default function PracticeQuestion({ data }) {
       flexShrink: 0,
       marginTop: 1,
     };
-    if (!selected) return { ...base, background: 'var(--bg)', color: 'var(--text-secondary)' };
-    if (key === correct) return { ...base, background: '#4CAF50', color: '#fff' };
-    if (key === selected) return { ...base, background: '#F44336', color: '#fff' };
-    return { ...base, background: 'var(--bg)', color: 'var(--text-muted)' };
+    if (!selected) return { ...base, background: 'var(--violet-50)', color: 'var(--text-secondary)' };
+    if (key === correct) return { ...base, background: 'var(--aqua-500)', color: '#fff' };
+    if (key === selected) return { ...base, background: '#f87171', color: '#fff' };
+    return { ...base, background: 'var(--border)', color: 'var(--text-muted)' };
   };
 
   return (
@@ -68,8 +66,8 @@ export default function PracticeQuestion({ data }) {
           alignSelf: 'flex-start',
           padding: '3px 10px',
           borderRadius: 20,
-          background: 'var(--violet-light)',
-          color: 'var(--violet)',
+          background: 'var(--violet-50)',
+          color: 'var(--violet-500)',
           fontSize: '11px',
           fontWeight: 700,
           letterSpacing: '0.3px',
@@ -79,7 +77,7 @@ export default function PracticeQuestion({ data }) {
         </span>
       )}
 
-      <p style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text)', lineHeight: 1.6 }}>
+      <p style={{ fontSize: '15px', fontWeight: 600, color: 'var(--violet-800)', lineHeight: 1.6 }}>
         {question}
       </p>
 
@@ -91,14 +89,14 @@ export default function PracticeQuestion({ data }) {
             onClick={() => handleSelect(key)}
             onMouseEnter={e => {
               if (!selected) {
-                e.currentTarget.style.borderColor = 'var(--aqua)';
-                e.currentTarget.style.background = 'var(--aqua-light)';
+                e.currentTarget.style.borderColor = 'var(--violet-500)';
+                e.currentTarget.style.background = 'var(--violet-50)';
               }
             }}
             onMouseLeave={e => {
               if (!selected) {
                 e.currentTarget.style.borderColor = 'var(--border)';
-                e.currentTarget.style.background = 'var(--surface)';
+                e.currentTarget.style.background = '#ffffff';
               }
             }}
           >
@@ -112,14 +110,18 @@ export default function PracticeQuestion({ data }) {
         <div style={{
           marginTop: 4,
           padding: '14px 16px',
-          background: selected === correct ? '#E8F5E9' : '#FFF8E1',
-          border: `1.5px solid ${selected === correct ? '#A5D6A7' : '#FFE082'}`,
+          background: selected === correct ? 'var(--aqua-50)' : '#fef2f2',
+          border: `1.5px solid ${selected === correct ? 'var(--aqua-500)' : '#fca5a5'}`,
           borderRadius: 'var(--radius-sm)',
           fontSize: '14px',
-          color: 'var(--text)',
+          color: 'var(--violet-800)',
           lineHeight: 1.6,
         }}>
-          <div style={{ fontWeight: 700, marginBottom: 4, color: selected === correct ? '#2E7D32' : '#E65100' }}>
+          <div style={{
+            fontWeight: 700,
+            marginBottom: 4,
+            color: selected === correct ? 'var(--aqua-500)' : '#b91c1c',
+          }}>
             {selected === correct ? '✓ Correct!' : `✗ The correct answer is ${correct}.`}
           </div>
           {explanation}

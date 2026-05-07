@@ -3,7 +3,7 @@ export default function Sidebar({ mode, timer, onStartOver }) {
     <aside style={{
       width: '220px',
       flexShrink: 0,
-      background: 'var(--surface)',
+      background: '#ffffff',
       borderRight: '1px solid var(--border)',
       display: 'flex',
       flexDirection: 'column',
@@ -11,36 +11,47 @@ export default function Sidebar({ mode, timer, onStartOver }) {
       gap: '20px',
     }}>
       <div>
-        <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: 8 }}>
+        <div style={{
+          fontSize: '10px',
+          fontWeight: 700,
+          color: 'var(--text-muted)',
+          letterSpacing: '0.8px',
+          textTransform: 'uppercase',
+          marginBottom: 8,
+        }}>
           Current Mode
         </div>
         <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          padding: '8px 12px',
-          background: 'var(--violet-light)',
+          padding: '8px 12px 8px 9px',
+          background: 'var(--violet-50)',
           borderRadius: 'var(--radius-sm)',
-          border: '1px solid rgba(79,23,168,0.15)',
+          border: '1px solid rgba(79,23,168,0.12)',
+          borderLeft: '3px solid var(--violet-500)',
         }}>
-          <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--violet)', flexShrink: 0 }} />
-          <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--violet)' }}>{mode}</span>
+          <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--violet-500)' }}>{mode}</span>
         </div>
       </div>
 
       <div>
-        <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: 8 }}>
+        <div style={{
+          fontSize: '10px',
+          fontWeight: 700,
+          color: 'var(--text-muted)',
+          letterSpacing: '0.8px',
+          textTransform: 'uppercase',
+          marginBottom: 8,
+        }}>
           Session Time
         </div>
         <div style={{
           padding: '8px 12px',
-          background: 'var(--aqua-light)',
+          background: 'var(--aqua-50)',
           borderRadius: 'var(--radius-sm)',
           border: '1px solid rgba(5,191,224,0.2)',
           fontFamily: 'ui-monospace, monospace',
           fontSize: '20px',
           fontWeight: 700,
-          color: 'var(--aqua-dark)',
+          color: 'var(--aqua-500)',
           letterSpacing: '1px',
         }}>
           {timer}
@@ -54,9 +65,9 @@ export default function Sidebar({ mode, timer, onStartOver }) {
             width: '100%',
             padding: '10px 0',
             borderRadius: 'var(--radius-sm)',
-            border: '1.5px solid var(--border)',
+            border: '1.5px solid var(--violet-500)',
             background: 'transparent',
-            color: 'var(--text-secondary)',
+            color: 'var(--violet-500)',
             fontSize: '13px',
             fontWeight: 600,
             transition: 'all 0.15s',
@@ -66,13 +77,9 @@ export default function Sidebar({ mode, timer, onStartOver }) {
             gap: 6,
           }}
           onMouseEnter={e => {
-            e.currentTarget.style.borderColor = 'var(--tangerine)';
-            e.currentTarget.style.color = 'var(--tangerine)';
-            e.currentTarget.style.background = 'var(--tangerine-light)';
+            e.currentTarget.style.background = 'var(--violet-50)';
           }}
           onMouseLeave={e => {
-            e.currentTarget.style.borderColor = 'var(--border)';
-            e.currentTarget.style.color = 'var(--text-secondary)';
             e.currentTarget.style.background = 'transparent';
           }}
         >

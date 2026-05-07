@@ -103,7 +103,7 @@ export default function App() {
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          background: screen === 'welcome' ? 'var(--bg)' : 'var(--bg)',
+          background: '#ffffff',
         }}>
           {screen === 'welcome' ? (
             <>
@@ -127,10 +127,11 @@ export default function App() {
                 {error && (
                   <div style={{
                     padding: '12px 16px',
-                    background: '#FFEBEE',
-                    border: '1px solid #FFCDD2',
+                    background: '#fef2f2',
+                    border: '1px solid #fca5a5',
+                    borderLeft: '3px solid #f87171',
                     borderRadius: 'var(--radius-sm)',
-                    color: '#B71C1C',
+                    color: '#b91c1c',
                     fontSize: '13px',
                   }}>
                     Error: {error}. Check that your API key is set in <code>.env</code>.

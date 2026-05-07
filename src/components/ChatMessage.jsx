@@ -24,18 +24,42 @@ export default function ChatMessage({ message, onChipSelect }) {
 
   if (isUser) {
     return (
-      <div className="msg-enter" style={{ display: 'flex', justifyContent: 'flex-end', padding: '4px 0' }}>
+      <div className="msg-enter" style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+        gap: 8,
+        padding: '4px 0',
+      }}>
         <div style={{
           maxWidth: '70%',
           padding: '12px 16px',
           borderRadius: 'var(--radius) var(--radius) 4px var(--radius)',
-          background: 'var(--tangerine)',
-          color: '#fff',
+          background: 'var(--tangerine-50)',
+          borderTop: '1px solid rgba(255,97,15,0.12)',
+          borderBottom: '1px solid rgba(255,97,15,0.12)',
+          borderLeft: '1px solid rgba(255,97,15,0.12)',
+          borderRight: '3px solid var(--tangerine-300)',
+          color: 'var(--violet-800)',
           fontSize: '14px',
           lineHeight: 1.6,
-          boxShadow: '0 2px 8px rgba(255,97,15,0.22)',
         }}>
           {parsed.text}
+        </div>
+        <div style={{
+          width: 32,
+          height: 32,
+          borderRadius: '50%',
+          background: 'var(--violet-500)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: 12,
+          fontWeight: 700,
+          color: '#fff',
+          flexShrink: 0,
+        }}>
+          U
         </div>
       </div>
     );
@@ -47,7 +71,7 @@ export default function ChatMessage({ message, onChipSelect }) {
         width: 32,
         height: 32,
         borderRadius: '50%',
-        background: 'var(--violet)',
+        background: 'var(--aqua-300)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -62,13 +86,16 @@ export default function ChatMessage({ message, onChipSelect }) {
 
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
-          background: 'var(--surface)',
-          border: '1px solid var(--border)',
+          background: 'var(--aqua-50)',
+          borderTop: '1px solid var(--border)',
+          borderRight: '1px solid var(--border)',
+          borderBottom: '1px solid var(--border)',
+          borderLeft: '3px solid var(--aqua-300)',
           borderRadius: '0 var(--radius) var(--radius) var(--radius)',
           padding: '14px 18px',
           boxShadow: 'var(--shadow-sm)',
           fontSize: '14px',
-          color: 'var(--text)',
+          color: 'var(--violet-800)',
           lineHeight: 1.6,
         }}>
           {parsed.text && (
