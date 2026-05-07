@@ -91,7 +91,7 @@ export default function App() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
-      <Header timer={timer} />
+      <Header timer={timer} onHome={handleStartOver} />
 
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         {screen === 'chat' && (

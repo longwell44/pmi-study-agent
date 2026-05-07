@@ -56,7 +56,7 @@ export default function Flashcard({ cards }) {
             <div style={{
               fontSize: '10px',
               fontWeight: 600,
-              color: '#9ca3af',
+              color: '#05BFE0',
               letterSpacing: '0.8px',
               textTransform: 'uppercase',
               marginBottom: 12,
@@ -81,7 +81,7 @@ export default function Flashcard({ cards }) {
             <div style={{
               fontSize: '10px',
               fontWeight: 600,
-              color: '#9ca3af',
+              color: '#FF610F',
               letterSpacing: '0.8px',
               textTransform: 'uppercase',
               marginBottom: 12,

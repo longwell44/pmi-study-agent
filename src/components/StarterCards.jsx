@@ -1,7 +1,8 @@
 const CARDS = [
   {
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    accent: { bg: '#EFEDF3', stroke: '#4F17A8' },
+    icon: (stroke) => (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
         <rect x="9" y="3" width="6" height="4" rx="1"/>
         <path d="M9 12h6M9 16h4"/>
@@ -11,8 +12,9 @@ const CARDS = [
     description: 'Test your knowledge with a realistic PMP-style question',
   },
   {
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    accent: { bg: '#EEFAFA', stroke: '#05BFE0' },
+    icon: (stroke) => (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="7" width="20" height="14" rx="2"/>
         <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
         <line x1="12" y1="12" x2="12" y2="16"/>
@@ -23,8 +25,9 @@ const CARDS = [
     description: 'Create study cards for any PMBOK concept or domain',
   },
   {
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    accent: { bg: '#FEF7F3', stroke: '#FF610F' },
+    icon: (stroke) => (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
       </svg>
@@ -33,8 +36,9 @@ const CARDS = [
     description: 'Deep dives into frameworks, principles, and performance domains',
   },
   {
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    accent: { bg: '#EFEDF3', stroke: '#4F17A8' },
+    icon: (stroke) => (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="4" width="18" height="18" rx="2"/>
         <line x1="16" y1="2" x2="16" y2="6"/>
         <line x1="8" y1="2" x2="8" y2="6"/>
@@ -45,8 +49,9 @@ const CARDS = [
     description: 'Get a personalized roadmap to PMP exam readiness',
   },
   {
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    accent: { bg: '#EEFAFA', stroke: '#05BFE0' },
+    icon: (stroke) => (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10"/>
         <circle cx="12" cy="12" r="3"/>
         <line x1="12" y1="2" x2="12" y2="5"/>
@@ -111,13 +116,16 @@ export default function StarterCards({ onSelect }) {
             }}
           >
             <div style={{
-              width: 32,
-              height: 32,
+              width: 36,
+              height: 36,
+              borderRadius: '8px',
+              background: card.accent.bg,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              flexShrink: 0,
             }}>
-              {card.icon}
+              {card.icon(card.accent.stroke)}
             </div>
             <div>
               <div style={{

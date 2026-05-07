@@ -1,3 +1,12 @@
+const labelStyle = {
+  fontSize: '10px',
+  fontWeight: 600,
+  color: '#4F17A8',
+  letterSpacing: '0.8px',
+  textTransform: 'uppercase',
+  marginBottom: 8,
+};
+
 export default function Sidebar({ mode, timer, onStartOver }) {
   return (
     <aside style={{
@@ -10,21 +19,13 @@ export default function Sidebar({ mode, timer, onStartOver }) {
       padding: '24px 0',
     }}>
       <div style={{ padding: '0 16px', marginBottom: 24 }}>
+        <div style={labelStyle}>Current Mode</div>
         <div style={{
-          fontSize: '10px',
-          fontWeight: 600,
-          color: '#6b7280',
-          letterSpacing: '0.8px',
-          textTransform: 'uppercase',
-          marginBottom: 8,
-        }}>
-          Mode
-        </div>
-        <div style={{
-          paddingLeft: 10,
-          borderLeft: '2px solid #4F17A8',
+          padding: '6px 10px',
+          background: '#4F17A8',
+          borderRadius: '6px',
           fontSize: '13px',
-          color: '#4F17A8',
+          color: '#ffffff',
           fontWeight: 500,
           lineHeight: 1.4,
         }}>
@@ -33,16 +34,7 @@ export default function Sidebar({ mode, timer, onStartOver }) {
       </div>
 
       <div style={{ padding: '0 16px', marginBottom: 24 }}>
-        <div style={{
-          fontSize: '10px',
-          fontWeight: 600,
-          color: '#6b7280',
-          letterSpacing: '0.8px',
-          textTransform: 'uppercase',
-          marginBottom: 8,
-        }}>
-          Session
-        </div>
+        <div style={labelStyle}>Session Time</div>
         <div style={{
           fontFamily: 'ui-monospace, monospace',
           fontSize: '20px',

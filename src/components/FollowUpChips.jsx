@@ -10,7 +10,10 @@ export default function FollowUpChips({ suggestions, onSelect }) {
           style={{
             padding: '5px 12px',
             borderRadius: '20px',
-            border: '1px solid #e5e7eb',
+            borderTop: '1px solid #e5e7eb',
+            borderRight: '1px solid #e5e7eb',
+            borderBottom: '1px solid #e5e7eb',
+            borderLeft: '2px solid #05BFE0',
             background: '#ffffff',
             fontSize: '12px',
             color: '#6b7280',

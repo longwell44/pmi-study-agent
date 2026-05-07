@@ -68,7 +68,10 @@ export default function ChatMessage({ message, onChipSelect }) {
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
           background: '#ffffff',
-          border: '1px solid #e5e7eb',
+          borderTop: '1px solid #e5e7eb',
+          borderRight: '1px solid #e5e7eb',
+          borderBottom: '1px solid #e5e7eb',
+          borderLeft: '2px solid #4F17A8',
           borderRadius: '4px 12px 12px 12px',
           padding: '14px 16px',
           fontSize: '14px',
