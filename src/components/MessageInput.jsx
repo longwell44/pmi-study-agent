@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
-export default function MessageInput({ onSend, disabled }) {
+export default function MessageInput({ onSend, disabled, maxWidth }) {
   const [value, setValue] = useState('');
   const textareaRef = useRef(null);
 
@@ -34,10 +34,11 @@ export default function MessageInput({ onSend, disabled }) {
       borderTop: '1px solid #e5e7eb',
       flexShrink: 0,
     }}>
+      <div style={maxWidth ? { maxWidth, margin: '0 auto', width: '100%' } : undefined}>
       <div
         style={{
           display: 'flex',
-          alignItems: 'flex-end',
+          alignItems: 'center',
           gap: 10,
           background: '#ffffff',
           border: '1px solid #e5e7eb',
@@ -67,7 +68,7 @@ export default function MessageInput({ onSend, disabled }) {
             lineHeight: 1.6,
             overflowY: 'auto',
             maxHeight: 160,
-            paddingTop: 4,
+            padding: 0,
           }}
         />
         <button
@@ -93,6 +94,7 @@ export default function MessageInput({ onSend, disabled }) {
       </div>
       <div style={{ textAlign: 'center', marginTop: 7, fontSize: '11px', color: '#9ca3af' }}>
         Enter to send · Shift+Enter for new line
+      </div>
       </div>
     </div>
   );

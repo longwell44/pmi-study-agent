@@ -1,6 +1,6 @@
 const CARDS = [
   {
-    accent: { bg: '#EFEDF3', stroke: '#4F17A8' },
+    accent: { bg: '#EDE9FF', stroke: '#5B21B6' },
     icon: (stroke) => (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
@@ -12,7 +12,7 @@ const CARDS = [
     description: 'Test your knowledge with a realistic PMP-style question',
   },
   {
-    accent: { bg: '#EEFAFA', stroke: '#05BFE0' },
+    accent: { bg: '#E0F5F1', stroke: '#0D9488' },
     icon: (stroke) => (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="7" width="20" height="14" rx="2"/>
@@ -25,7 +25,7 @@ const CARDS = [
     description: 'Create study cards for any PMBOK concept or domain',
   },
   {
-    accent: { bg: '#FEF7F3', stroke: '#FF610F' },
+    accent: { bg: '#FEF3E2', stroke: '#D97706' },
     icon: (stroke) => (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
@@ -36,7 +36,7 @@ const CARDS = [
     description: 'Deep dives into frameworks, principles, and performance domains',
   },
   {
-    accent: { bg: '#EFEDF3', stroke: '#4F17A8' },
+    accent: { bg: '#FDE8F0', stroke: '#DB2777' },
     icon: (stroke) => (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="4" width="18" height="18" rx="2"/>
@@ -49,7 +49,7 @@ const CARDS = [
     description: 'Get a personalized roadmap to PMP exam readiness',
   },
   {
-    accent: { bg: '#EEFAFA', stroke: '#05BFE0' },
+    accent: { bg: '#E8F1FD', stroke: '#2563EB' },
     icon: (stroke) => (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10"/>
@@ -65,7 +65,7 @@ const CARDS = [
   },
 ];
 
-export default function StarterCards({ onSelect }) {
+export default function StarterCards({ onSelect, recommended = [] }) {
   return (
     <div style={{
       flex: 1,
@@ -98,51 +98,71 @@ export default function StarterCards({ onSelect }) {
         width: '100%',
         maxWidth: 820,
       }}>
-        {CARDS.map((card) => (
-          <button
-            key={card.label}
-            className="starter-card"
-            onClick={() => onSelect(card.label)}
-            style={{
-              background: '#ffffff',
-              border: '1px solid #e5e7eb',
-              borderRadius: '8px',
-              padding: '18px 16px',
-              textAlign: 'left',
-              transition: 'background 0.15s',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 10,
-            }}
-          >
-            <div style={{
-              width: 36,
-              height: 36,
-              borderRadius: '8px',
-              background: card.accent.bg,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}>
-              {card.icon(card.accent.stroke)}
-            </div>
-            <div>
+        {CARDS.map((card) => {
+          const isRecommended = recommended.includes(card.label);
+          return (
+            <button
+              key={card.label}
+              className="starter-card"
+              onClick={() => onSelect(card.label)}
+              style={{
+                position: 'relative',
+                background: '#ffffff',
+                border: '1px solid #e5e7eb',
+                borderRadius: '8px',
+                padding: '18px 16px',
+                textAlign: 'left',
+                transition: 'background 0.15s',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 10,
+              }}
+            >
+              {isRecommended && (
+                <span style={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                  background: '#EDE9FF',
+                  color: '#5B21B6',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  padding: '2px 8px',
+                  borderRadius: '20px',
+                }}>
+                  Recommended
+                </span>
+              )}
               <div style={{
-                fontSize: '13px',
-                fontWeight: 600,
-                color: '#200F3B',
-                marginBottom: 3,
-                lineHeight: 1.3,
+                width: 36,
+                height: 36,
+                borderRadius: '8px',
+                background: card.accent.bg,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
               }}>
-                {card.label}
+                {card.icon(card.accent.stroke)}
               </div>
-              <div style={{ fontSize: '12px', color: '#6b7280', lineHeight: 1.5 }}>
-                {card.description}
+              <div>
+                <div style={{
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  color: '#200F3B',
+                  marginBottom: 3,
+                  lineHeight: 1.3,
+                  paddingRight: isRecommended ? 80 : 0,
+                }}>
+                  {card.label}
+                </div>
+                <div style={{ fontSize: '12px', color: '#6b7280', lineHeight: 1.5 }}>
+                  {card.description}
+                </div>
               </div>
-            </div>
-          </button>
-        ))}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
