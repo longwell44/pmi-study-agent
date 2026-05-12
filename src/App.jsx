@@ -120,10 +120,15 @@ export default function App() {
   const [onboardingStage, setOnboardingStage] = useState(initial.stage);
   const [onboardingStruggle, setOnboardingStruggle] = useState(initial.struggle);
   const bottomRef = useRef(null);
+  const lastMsgRef = useRef(null);
   const { formatted: timer, reset: resetTimer } = useSessionTimer();
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (isTyping) {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      lastMsgRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }, [messages, isTyping]);
 
   const handleOnboardingComplete = (stage, struggle) => {
@@ -300,8 +305,10 @@ export default function App() {
                 flexDirection: 'column',
                 gap: 12,
               }}>
-                {messages.map((msg) => (
-                  <ChatMessage key={msg.id} message={msg} onChipSelect={handleSend} />
+                {messages.map((msg, idx) => (
+                  <div key={msg.id} ref={idx === messages.length - 1 ? lastMsgRef : null}>
+                    <ChatMessage message={msg} onChipSelect={handleSend} />
+                  </div>
                 ))}
                 {isTyping && <TypingIndicator />}
                 {error && (

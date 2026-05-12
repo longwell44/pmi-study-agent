@@ -78,7 +78,7 @@ export default function ChatMessage({ message, onChipSelect }) {
           color: '#200F3B',
           lineHeight: 1.6,
         }}>
-          {parsed.text && (
+          {parsed.text && parsed.type !== 'question' && (
             <div style={{ marginBottom: parsed.type !== 'text' ? 16 : 0 }}>
               {renderText(parsed.text)}
             </div>
