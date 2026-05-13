@@ -42,24 +42,6 @@ function buildContextString(stage, struggle) {
   return `${base} Do not ask them to re-introduce themselves or repeat anything covered here.`;
 }
 
-const STAGE_SUMMARY = {
-  "Just starting to explore": "We'll help you work out if PMP is the right move for you.",
-  "Actively studying": "We'll keep your prep focused and on track.",
-  "Exam is booked": "Let's make the most of your time before exam day.",
-};
-
-const STRUGGLE_SUFFIX = {
-  'Understanding the concepts': 'Starting with clear concept explanations.',
-  'Applying concepts to exam-style questions': 'Focusing on scenario-based practice.',
-  'Agile and hybrid approaches': 'Giving extra attention to agile and hybrid approaches.',
-  "I'm not sure where to start": 'Helping you build a clear study plan.',
-};
-
-function buildWelcomeSummary(stage, struggle) {
-  const base = STAGE_SUMMARY[stage] ?? "Welcome — let's get started.";
-  const suffix = struggle ? ` ${STRUGGLE_SUFFIX[struggle]}` : '';
-  return base + suffix;
-}
 
 const RECOMMENDED_MAP = {
   "Just starting to explore": () => ['How is the PMP exam structured?', 'Explain a PMBOK concept'],
@@ -81,13 +63,6 @@ function getRecommended(stage, struggle) {
   return fn ? fn(struggle) : [];
 }
 
-function PencilIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style={{ display: 'block' }}>
-      <path d="M9.5 1.5l2 2-7 7H2.5v-2l7-7z" stroke="#9ca3af" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
 
 function getInitialState() {
   try {
@@ -258,51 +233,12 @@ export default function App() {
         }}>
           {screen === 'welcome' ? (
             <>
-              {onboardingStage && (
-                <div style={{ padding: '16px 24px 0' }}>
-                  <div style={{ maxWidth: 820, margin: '0 auto', width: '100%' }}>
-                    <div style={{
-                      background: '#F5F3FF',
-                      border: '1px solid #E9E3FF',
-                      borderRadius: '8px',
-                      padding: '12px 16px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      gap: 12,
-                    }}>
-                      <div>
-                        <div style={{ fontSize: '12px', color: '#7C5CBF', fontWeight: 600, marginBottom: 3 }}>
-                          Personalised for you
-                        </div>
-                        <div style={{ fontSize: '14px', color: '#200F3B', lineHeight: 1.4 }}>
-                          {buildWelcomeSummary(onboardingStage, onboardingStruggle)}
-                        </div>
-                      </div>
-                      <button
-                        onClick={handleEditOnboarding}
-                        title="Edit preferences"
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          padding: '2px',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 4,
-                          flexShrink: 0,
-                        }}
-                      >
-                        <PencilIcon />
-                        <span style={{ fontSize: '12px', color: '#7C5CBF' }}>Edit</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
               <StarterCards
                 onSelect={handleSend}
                 recommended={getRecommended(onboardingStage, onboardingStruggle)}
+                stage={onboardingStage}
+                struggle={onboardingStruggle}
+                onEdit={handleEditOnboarding}
               />
               <MessageInput onSend={handleSend} disabled={isTyping} maxWidth={820} />
             </>

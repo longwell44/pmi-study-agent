@@ -65,7 +65,7 @@ const CARDS = [
   },
 ];
 
-export default function StarterCards({ onSelect, recommended = [] }) {
+export default function StarterCards({ onSelect, recommended = [], stage, struggle, onEdit }) {
   return (
     <div style={{
       flex: 1,
@@ -90,6 +90,37 @@ export default function StarterCards({ onSelect, recommended = [] }) {
           Choose where to start, or type your own question below.
         </p>
       </div>
+
+      {stage && (
+        <div style={{
+          background: '#f3f4f6',
+          borderRadius: '8px',
+          padding: '8px 16px',
+          maxWidth: 820,
+          width: '100%',
+          textAlign: 'center',
+        }}>
+          <span style={{ fontSize: '12px', color: '#9ca3af' }}>
+            Personalised for you — <span style={{ fontWeight: 500 }}>Stage:</span> {stage}
+            {struggle && <> · <span style={{ fontWeight: 500 }}>Focus:</span> {struggle}</>}
+            {' · '}
+            <button
+              onClick={onEdit}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#9ca3af',
+                fontSize: '12px',
+                cursor: 'pointer',
+                padding: 0,
+                textDecoration: 'underline',
+              }}
+            >
+              Edit
+            </button>
+          </span>
+        </div>
+      )}
 
       <div style={{
         display: 'grid',
@@ -164,6 +195,7 @@ export default function StarterCards({ onSelect, recommended = [] }) {
           );
         })}
       </div>
+
     </div>
   );
 }
