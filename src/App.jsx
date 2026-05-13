@@ -10,40 +10,49 @@ import OnboardingTransition from './components/OnboardingTransition.jsx';
 import { useSessionTimer } from './hooks/useSessionTimer.js';
 import { parseResponse, detectMode, getFollowUps } from './utils/parseResponse.js';
 
-const STAGE_CONTEXT = {
-  "I'm figuring out if PMP is right for me": 'The user is exploring whether to pursue the PMP certification.',
-  "I'm preparing for the exam": 'The user is actively preparing for the PMP exam.',
-  'My exam is scheduled': 'The user has scheduled their PMP exam and is in final preparation mode.',
-};
-
-const STRUGGLE_CONTEXT = {
-  'Understanding the concepts': 'They are finding the core concepts difficult to grasp. Focus on clear explanations before practice.',
-  'Applying them to scenarios': 'They struggle to apply concepts to real scenarios. Prioritize scenario-based practice questions.',
-  'Keeping up with agile approaches': 'They find agile and hybrid approaches most challenging. Prioritize agile content and practice questions in that domain.',
-  'Knowing where to focus': 'They are unsure where to focus their study. Help them prioritize by domain and suggest a study plan.',
-  "Haven't started yet": 'They have not started studying yet. Start with orientation and a clear study plan.',
+const CONTEXT_MAP = {
+  "Just starting to explore": {
+    _default: "The user is just beginning to explore PMP certification. Orient them to what the PMP is, who it's for, and what the exam covers. Lead with big-picture framing before any practice questions.",
+    "Understanding the concepts": "The user is exploring PMP and finds the core concepts hard to grasp. Use simple analogies, avoid jargon, and focus on PMBOK 7 principles and performance domains before any practice.",
+    "Applying concepts to exam-style questions": "The user is exploring PMP and struggles to apply concepts to real situations. Use scenario-based examples to make concepts concrete. Explain the 'why' behind each answer.",
+    "Agile and hybrid approaches": "The user is exploring PMP and finds agile and hybrid approaches confusing. Clarify the difference between predictive, agile, and hybrid. Use real project examples to ground the concepts.",
+    "I'm not sure where to start": "The user is exploring PMP and has no study plan. Begin with a clear orientation: what the exam tests, how it's structured (ECO domains), and what a realistic prep path looks like.",
+  },
+  "Actively studying": {
+    _default: "The user is actively studying for the PMP exam with the exam likely 2–6 months away. Offer a balanced mix of concept explanations, flashcards, and scenario-based practice questions. Match their pace.",
+    "Understanding the concepts": "The user is actively studying but struggles with core concepts. Prioritize clear concept explanations tied to PMBOK 7 principles and the ECO domains. Use flashcards to reinforce. Introduce practice questions only after concepts are grounded.",
+    "Applying concepts to exam-style questions": "The user is actively studying but struggles to apply knowledge to exam-style questions. Default to scenario-based practice questions. Always explain why each answer is correct or incorrect using PMI reasoning, not just facts.",
+    "Agile and hybrid approaches": "The user is actively studying and finds agile and hybrid approaches most challenging. Agile and hybrid content spans all three ECO domains and represents a major portion of the exam. Prioritize servant leadership, iteration planning, team empowerment, retrospectives, and hybrid decision-making. Lead with agile scenario questions and connect every concept to how PMI frames it in the ECO.",
+    "I'm not sure where to start": "The user is actively studying but does not know where to focus. Generate a prioritized study plan based on the three ECO domains: People (42%), Process (50%), Business Environment (8%). Recommend starting with their weakest domain and suggest a weekly study structure.",
+  },
+  "Exam is booked": {
+    _default: "The user has booked their PMP exam and is in final preparation mode — likely within 60 days. Focus exclusively on exam readiness: scenario-based practice questions, timed drills, and weak spot targeting. Do not spend time on broad orientation.",
+    "Understanding the concepts": "The user has booked their PMP exam but still struggles with core concepts. This is urgent — focus on the highest-frequency PMBOK 7 concepts that appear in exam scenarios. Connect every explanation directly to how it would be tested. Use flashcards for rapid reinforcement.",
+    "Applying concepts to exam-style questions": "The user has booked their PMP exam and struggles with scenario-based questions — the dominant question type on the PMP. Drill scenario questions relentlessly. After every answer explain the PMI mindset behind it. Help them recognize patterns in how PMI frames correct answers.",
+    "Agile and hybrid approaches": "The user has booked their PMP exam and is weakest on agile and hybrid. This is a critical gap — agile/hybrid content is heavily weighted across all ECO domains. Immediately prioritize agile scenario questions. Focus on servant leadership, adaptive planning, team dynamics, and hybrid approaches. Every session should include at least one agile scenario question.",
+    "I'm not sure where to start": "The user has booked their PMP exam and still has no clear study plan — this is urgent. Immediately generate a focused 4–8 week study plan based on ECO domain weighting. Prioritize Process (50%) and People (42%) domains. Focus on practice questions over concept reading at this stage.",
+  },
 };
 
 function buildContextString(stage, struggle) {
-  const parts = [];
-  if (stage && STAGE_CONTEXT[stage]) parts.push(STAGE_CONTEXT[stage]);
-  if (struggle && STRUGGLE_CONTEXT[struggle]) parts.push(STRUGGLE_CONTEXT[struggle]);
-  parts.push('Do not ask them to re-introduce themselves or repeat anything covered here.');
-  return parts.join(' ');
+  if (!stage) return null;
+  const stageMap = CONTEXT_MAP[stage];
+  if (!stageMap) return null;
+  const base = (struggle && stageMap[struggle]) || stageMap._default || '';
+  return `${base} Do not ask them to re-introduce themselves or repeat anything covered here.`;
 }
 
 const STAGE_SUMMARY = {
-  "I'm figuring out if PMP is right for me": "We'll help you work out if PMP is the right move for you.",
-  "I'm preparing for the exam": "We'll keep your prep focused and on track.",
-  'My exam is scheduled': "Let's make the most of your time before exam day.",
+  "Just starting to explore": "We'll help you work out if PMP is the right move for you.",
+  "Actively studying": "We'll keep your prep focused and on track.",
+  "Exam is booked": "Let's make the most of your time before exam day.",
 };
 
 const STRUGGLE_SUFFIX = {
   'Understanding the concepts': 'Starting with clear concept explanations.',
-  'Applying them to scenarios': 'Focusing on scenario-based practice.',
-  'Keeping up with agile approaches': 'Giving extra attention to agile and hybrid approaches.',
-  'Knowing where to focus': 'Helping you prioritise where to direct your energy.',
-  "Haven't started yet": 'Starting from the beginning with a clear path forward.',
+  'Applying concepts to exam-style questions': 'Focusing on scenario-based practice.',
+  'Agile and hybrid approaches': 'Giving extra attention to agile and hybrid approaches.',
+  "I'm not sure where to start": 'Helping you build a clear study plan.',
 };
 
 function buildWelcomeSummary(stage, struggle) {
@@ -53,18 +62,17 @@ function buildWelcomeSummary(stage, struggle) {
 }
 
 const RECOMMENDED_MAP = {
-  "I'm figuring out if PMP is right for me": () => ['How is the PMP exam structured?', 'Explain a PMBOK concept'],
-  "I'm preparing for the exam": (struggle) => {
+  "Just starting to explore": () => ['How is the PMP exam structured?', 'Explain a PMBOK concept'],
+  "Actively studying": (struggle) => {
     const map = {
       'Understanding the concepts':       ['Explain a PMBOK concept', 'Generate flashcards for a topic'],
-      'Applying them to scenarios':        ['Give me a practice question', 'Explain a PMBOK concept'],
-      'Keeping up with agile approaches':  ['Give me a practice question', 'Generate flashcards for a topic'],
-      'Knowing where to focus':            ['Help me build a study plan', 'Explain a PMBOK concept'],
-      "Haven't started yet":               ['Help me build a study plan', 'How is the PMP exam structured?'],
+      'Applying concepts to exam-style questions':   ['Give me a practice question', 'Explain a PMBOK concept'],
+      'Agile and hybrid approaches':       ['Give me a practice question', 'Generate flashcards for a topic'],
+      "I'm not sure where to start":       ['Help me build a study plan', 'Explain a PMBOK concept'],
     };
     return map[struggle] ?? ['Explain a PMBOK concept', 'Give me a practice question'];
   },
-  'My exam is scheduled': () => ['Give me a practice question', 'Help me build a study plan'],
+  "Exam is booked": () => ['Give me a practice question', 'Help me build a study plan'],
 };
 
 function getRecommended(stage, struggle) {
@@ -207,6 +215,9 @@ export default function App() {
     resetTimer();
   };
 
+  const lastAssistantMsg = [...messages].reverse().find(m => m.role === 'assistant');
+  const isStudyPlanActive = !isTyping && lastAssistantMsg?.parsed?.type === 'study_plan_question';
+
   if (screen === 'onboarding') {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
@@ -326,7 +337,7 @@ export default function App() {
                 <div ref={bottomRef} />
               </div>
 
-              <MessageInput onSend={handleSend} disabled={isTyping} />
+              {!isStudyPlanActive && <MessageInput onSend={handleSend} disabled={isTyping} />}
             </>
           )}
         </main>

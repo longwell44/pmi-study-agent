@@ -1,15 +1,14 @@
 const STAGE_SENTENCE = {
-  "I'm figuring out if PMP is right for me": "We've set things up to help you explore whether PMP is the right move for you.",
-  "I'm preparing for the exam": "We've tailored your experience to keep your prep on track.",
-  'My exam is scheduled': "We've set you up to make the most of your time before exam day.",
+  "Just starting to explore": "We've set things up to help you explore whether PMP is the right move for you.",
+  "Actively studying": "We've tailored your experience to keep your prep on track.",
+  "Exam is booked": "We've set you up to make the most of your time before exam day.",
 };
 
 const STRUGGLE_SENTENCE = {
   'Understanding the concepts': "You'll get clear concept explanations before moving into practice.",
-  'Applying them to scenarios': "You'll see scenario-based practice questions front and centre.",
-  'Keeping up with agile approaches': "Agile and hybrid content will be prioritised throughout.",
-  'Knowing where to focus': "We'll help you identify where to direct your energy.",
-  "Haven't started yet": "We'll start from the beginning with a clear, simple path forward.",
+  'Applying concepts to exam-style questions': "You'll see scenario-based practice questions front and centre.",
+  'Agile and hybrid approaches': "Agile and hybrid content will be prioritised throughout.",
+  "I'm not sure where to start": "We'll help you build a clear study plan to direct your energy.",
 };
 
 function buildMessage(stage, struggle) {

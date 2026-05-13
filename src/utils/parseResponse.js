@@ -1,4 +1,13 @@
 export function parseResponse(text) {
+  const spIdx = text.indexOf('STUDY_PLAN_QUESTION_JSON:');
+  if (spIdx !== -1) {
+    const jsonStr = text.slice(spIdx + 'STUDY_PLAN_QUESTION_JSON:'.length).trim();
+    try {
+      const data = JSON.parse(jsonStr);
+      return { type: 'study_plan_question', text: text.slice(0, spIdx).trim(), data };
+    } catch {}
+  }
+
   const qIdx = text.indexOf('QUESTION_JSON:');
   if (qIdx !== -1) {
     const jsonStr = text.slice(qIdx + 'QUESTION_JSON:'.length).trim();
@@ -31,6 +40,9 @@ export function detectMode(userMessage) {
 }
 
 export function getFollowUps(parsedResponse) {
+  if (parsedResponse.type === 'study_plan_question') {
+    return [];
+  }
   if (parsedResponse.type === 'question') {
     const domain = parsedResponse.data?.domain;
     return [

@@ -1,17 +1,16 @@
 import { useState } from 'react';
 
 const STAGE_OPTIONS = [
-  "I'm figuring out if PMP is right for me",
-  "I'm preparing for the exam",
-  "My exam is scheduled",
+  'Just starting to explore',
+  'Actively studying',
+  'Exam is booked',
 ];
 
 const STRUGGLE_OPTIONS = [
   'Understanding the concepts',
-  'Applying them to scenarios',
-  'Keeping up with agile approaches',
-  'Knowing where to focus',
-  "Haven't started yet",
+  'Applying concepts to exam-style questions',
+  'Agile and hybrid approaches',
+  "I'm not sure where to start",
 ];
 
 function Chip({ label, selected, onClick }) {
