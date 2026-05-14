@@ -1,4 +1,13 @@
 export function parseResponse(text) {
+  const planIdx = text.indexOf('STUDY_PLAN_JSON:');
+  if (planIdx !== -1) {
+    const jsonStr = text.slice(planIdx + 'STUDY_PLAN_JSON:'.length).trim();
+    try {
+      const data = JSON.parse(jsonStr);
+      return { type: 'study_plan', text: text.slice(0, planIdx).trim(), data };
+    } catch {}
+  }
+
   const tsIdx = text.indexOf('TUTOR_START_JSON:');
   if (tsIdx !== -1) {
     const jsonStr = text.slice(tsIdx + 'TUTOR_START_JSON:'.length).trim();
@@ -49,7 +58,7 @@ export function detectMode(userMessage) {
 }
 
 export function getFollowUps(parsedResponse) {
-  if (parsedResponse.type === 'study_plan_question' || parsedResponse.type === 'tutor_start') {
+  if (parsedResponse.type === 'study_plan_question' || parsedResponse.type === 'tutor_start' || parsedResponse.type === 'study_plan') {
     return [];
   }
   if (parsedResponse.type === 'question') {

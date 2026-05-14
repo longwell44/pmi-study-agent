@@ -2,6 +2,7 @@ import PracticeQuestion from './PracticeQuestion.jsx';
 import Flashcard from './Flashcard.jsx';
 import FollowUpChips from './FollowUpChips.jsx';
 import StudyPlanQuestion from './StudyPlanQuestion.jsx';
+import StudyPlanCard from './StudyPlanCard.jsx';
 
 const avatarStyle = {
   width: 28,
@@ -79,7 +80,7 @@ export default function ChatMessage({ message, onChipSelect }) {
           color: '#200F3B',
           lineHeight: 1.6,
         }}>
-          {parsed.text && parsed.type !== 'question' && parsed.type !== 'study_plan_question' && parsed.type !== 'tutor_start' && (
+          {parsed.text && parsed.type !== 'question' && parsed.type !== 'study_plan_question' && parsed.type !== 'tutor_start' && parsed.type !== 'study_plan' && (
             <div style={{ marginBottom: parsed.type !== 'text' ? 16 : 0 }}>
               {renderText(parsed.text)}
             </div>
@@ -99,6 +100,10 @@ export default function ChatMessage({ message, onChipSelect }) {
 
           {parsed.type === 'tutor_start' && parsed.data && (
             <StudyPlanQuestion data={parsed.data} onSelect={onChipSelect} />
+          )}
+
+          {parsed.type === 'study_plan' && parsed.data && (
+            <StudyPlanCard data={parsed.data} />
           )}
         </div>
 
