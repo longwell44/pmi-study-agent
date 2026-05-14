@@ -1,5 +1,19 @@
 const CARDS = [
   {
+    accent: { bg: '#FEE2E2', stroke: '#DC2626' },
+    badge: 'New',
+    prompt: 'Start tutor mode',
+    icon: (stroke) => (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    ),
+    label: 'Tutor mode',
+    description: 'Answer open-ended questions and get intelligent feedback',
+  },
+  {
     accent: { bg: '#EDE9FF', stroke: '#5B21B6' },
     icon: (stroke) => (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -131,11 +145,12 @@ export default function StarterCards({ onSelect, recommended = [], stage, strugg
       }}>
         {CARDS.map((card) => {
           const isRecommended = recommended.includes(card.label);
+          const badgeLabel = card.badge ?? (isRecommended ? 'Recommended' : null);
           return (
             <button
               key={card.label}
               className="starter-card"
-              onClick={() => onSelect(card.label)}
+              onClick={() => onSelect(card.prompt ?? card.label)}
               style={{
                 position: 'relative',
                 background: '#ffffff',
@@ -149,19 +164,19 @@ export default function StarterCards({ onSelect, recommended = [], stage, strugg
                 gap: 10,
               }}
             >
-              {isRecommended && (
+              {badgeLabel && (
                 <span style={{
                   position: 'absolute',
                   top: 10,
                   right: 10,
-                  background: '#EDE9FF',
-                  color: '#5B21B6',
+                  background: badgeLabel === 'New' ? '#FEE2E2' : '#EDE9FF',
+                  color: badgeLabel === 'New' ? '#DC2626' : '#5B21B6',
                   fontSize: '11px',
                   fontWeight: 600,
                   padding: '2px 8px',
                   borderRadius: '20px',
                 }}>
-                  Recommended
+                  {badgeLabel}
                 </span>
               )}
               <div style={{
@@ -183,7 +198,7 @@ export default function StarterCards({ onSelect, recommended = [], stage, strugg
                   color: '#200F3B',
                   marginBottom: 3,
                   lineHeight: 1.3,
-                  paddingRight: isRecommended ? 80 : 0,
+                  paddingRight: badgeLabel ? 80 : 0,
                 }}>
                   {card.label}
                 </div>

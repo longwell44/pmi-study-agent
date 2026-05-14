@@ -1,4 +1,13 @@
 export function parseResponse(text) {
+  const tsIdx = text.indexOf('TUTOR_START_JSON:');
+  if (tsIdx !== -1) {
+    const jsonStr = text.slice(tsIdx + 'TUTOR_START_JSON:'.length).trim();
+    try {
+      const data = JSON.parse(jsonStr);
+      return { type: 'tutor_start', text: text.slice(0, tsIdx).trim(), data };
+    } catch {}
+  }
+
   const spIdx = text.indexOf('STUDY_PLAN_QUESTION_JSON:');
   if (spIdx !== -1) {
     const jsonStr = text.slice(spIdx + 'STUDY_PLAN_QUESTION_JSON:'.length).trim();
@@ -40,7 +49,7 @@ export function detectMode(userMessage) {
 }
 
 export function getFollowUps(parsedResponse) {
-  if (parsedResponse.type === 'study_plan_question') {
+  if (parsedResponse.type === 'study_plan_question' || parsedResponse.type === 'tutor_start') {
     return [];
   }
   if (parsedResponse.type === 'question') {

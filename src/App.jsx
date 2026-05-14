@@ -191,7 +191,7 @@ export default function App() {
   };
 
   const lastAssistantMsg = [...messages].reverse().find(m => m.role === 'assistant');
-  const isStudyPlanActive = !isTyping && lastAssistantMsg?.parsed?.type === 'study_plan_question';
+  const isStudyPlanActive = !isTyping && (lastAssistantMsg?.parsed?.type === 'study_plan_question' || lastAssistantMsg?.parsed?.type === 'tutor_start');
 
   if (screen === 'onboarding') {
     return (
