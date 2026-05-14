@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import PasswordGate from './components/PasswordGate.jsx';
 import Header from './components/Header.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import StarterCards from './components/StarterCards.jsx';
@@ -91,6 +92,9 @@ async function callApi(messages, userContext) {
 }
 
 export default function App() {
+  const [accessGranted, setAccessGranted] = useState(
+    () => sessionStorage.getItem('pmi_access_granted') === '1'
+  );
   const initial = getInitialState();
   const [screen, setScreen] = useState(initial.screen);
   const [messages, setMessages] = useState([]);
@@ -192,6 +196,15 @@ export default function App() {
 
   const lastAssistantMsg = [...messages].reverse().find(m => m.role === 'assistant');
   const isStudyPlanActive = !isTyping && (lastAssistantMsg?.parsed?.type === 'study_plan_question' || lastAssistantMsg?.parsed?.type === 'tutor_start');
+
+  if (!accessGranted) {
+    return (
+      <PasswordGate onSuccess={() => {
+        sessionStorage.setItem('pmi_access_granted', '1');
+        setAccessGranted(true);
+      }} />
+    );
+  }
 
   if (screen === 'onboarding') {
     return (
