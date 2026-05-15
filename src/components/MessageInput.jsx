@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
-export default function MessageInput({ onSend, disabled, maxWidth }) {
+export default function MessageInput({ onSend, disabled, maxWidth, placeholder = 'Ask anything about the PMP exam…' }) {
   const [value, setValue] = useState('');
   const textareaRef = useRef(null);
 
@@ -54,7 +54,7 @@ export default function MessageInput({ onSend, disabled, maxWidth }) {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKey}
-          placeholder="Ask anything about the PMP exam…"
+          placeholder={placeholder}
           disabled={disabled}
           rows={1}
           style={{

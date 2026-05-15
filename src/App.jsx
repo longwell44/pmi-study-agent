@@ -65,6 +65,15 @@ function getRecommended(stage, struggle) {
 }
 
 
+const MODE_PLACEHOLDERS = {
+  'Tutor Mode':        'Type your answer…',
+  'Practice Questions':'Type your answer…',
+  'Flashcards':        'Ask for more cards or type a topic…',
+  'Study Planning':    'Ask to adjust your plan…',
+  'Concept Review':    'Ask a follow-up question…',
+  'Exam Overview':     'Ask a follow-up question…',
+};
+
 const MODE_DESCRIPTORS = {
   'Tutor Mode':        "Ask me anything and I'll respond like a tutor — probing your thinking, correcting gaps, and pushing you one level deeper.",
   'Practice Questions':"I'll give you a realistic PMP-style scenario question with four options. Select your answer and I'll explain exactly why it's right or wrong.",
@@ -262,7 +271,7 @@ export default function App() {
                 struggle={onboardingStruggle}
                 onEdit={handleEditOnboarding}
               />
-              <MessageInput onSend={handleSend} disabled={isTyping} maxWidth={820} />
+              <MessageInput onSend={handleSend} disabled={isTyping} maxWidth={820} placeholder={MODE_PLACEHOLDERS[currentMode] ?? 'Ask anything about the PMP exam…'} />
             </>
           ) : (
             <>
@@ -322,7 +331,7 @@ export default function App() {
                 <div ref={bottomRef} />
               </div>
 
-              {!isStudyPlanActive && <MessageInput onSend={handleSend} disabled={isTyping} />}
+              {!isStudyPlanActive && <MessageInput onSend={handleSend} disabled={isTyping} placeholder={MODE_PLACEHOLDERS[currentMode] ?? 'Ask anything about the PMP exam…'} />}
             </>
           )}
         </main>
