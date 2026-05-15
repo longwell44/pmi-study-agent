@@ -14,15 +14,18 @@ const STRUGGLE_OPTIONS = [
 ];
 
 function Chip({ label, selected, onClick }) {
+  const [hovered, setHovered] = useState(false);
   return (
     <button
       onClick={() => onClick(label)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
         padding: '10px 18px',
         borderRadius: '24px',
-        border: `${selected ? '2px' : '1.5px'} solid ${selected ? '#200F3B' : '#e5e7eb'}`,
-        background: '#ffffff',
-        color: selected ? '#200F3B' : '#9ca3af',
+        border: `${selected ? '2px' : '1.5px'} solid ${selected ? '#200F3B' : hovered ? '#9ca3af' : '#d1d5db'}`,
+        background: selected ? '#ffffff' : hovered ? '#f9fafb' : '#ffffff',
+        color: selected ? '#200F3B' : '#200F3B',
         fontSize: '14px',
         fontWeight: selected ? 600 : 400,
         cursor: 'pointer',
