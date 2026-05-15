@@ -243,7 +243,7 @@ export default function App() {
 
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         {screen === 'chat' && (
-          <Sidebar mode={currentMode} timer={timer} onStartOver={handleStartOver} />
+          <Sidebar timer={timer} onStartOver={handleStartOver} />
         )}
 
         <main style={{
@@ -268,9 +268,20 @@ export default function App() {
             <>
               {MODE_DESCRIPTORS[currentMode] && (
                 <div style={{
-                  padding: '12px 24px 0',
+                  padding: '16px 24px 0',
                   flexShrink: 0,
+                  textAlign: 'center',
                 }}>
+                  <p style={{
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    color: '#9ca3af',
+                    letterSpacing: '0.6px',
+                    textTransform: 'uppercase',
+                    margin: '0 0 4px',
+                  }}>
+                    {currentMode}
+                  </p>
                   <p style={{
                     fontSize: '12px',
                     color: '#9ca3af',
@@ -279,7 +290,7 @@ export default function App() {
                   }}>
                     {MODE_DESCRIPTORS[currentMode]}
                   </p>
-                  <div style={{ marginTop: 10, borderBottom: '1px solid #f3f4f6' }} />
+                  <div style={{ marginTop: 12, borderBottom: '1px solid #f3f4f6' }} />
                 </div>
               )}
               <div style={{
