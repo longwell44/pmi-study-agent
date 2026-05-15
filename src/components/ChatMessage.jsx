@@ -1,3 +1,5 @@
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import PracticeQuestion from './PracticeQuestion.jsx';
 import Flashcard from './Flashcard.jsx';
 import FollowUpChips from './FollowUpChips.jsx';
@@ -20,21 +22,35 @@ const avatarStyle = {
   flexShrink: 0,
 };
 
-function renderText(text) {
-  if (!text) return null;
-  const lines = text.split('\n');
-  return lines.map((line, i) => {
-    const trimmed = line.trim();
-    if (trimmed.startsWith('**') && trimmed.endsWith('**')) {
-      return <p key={i} style={{ fontWeight: 700, margin: '6px 0 2px' }}>{trimmed.slice(2, -2)}</p>;
-    }
-    if (trimmed.startsWith('- ') || trimmed.startsWith('• ')) {
-      return <li key={i} style={{ marginLeft: 16, marginBottom: 2 }}>{trimmed.slice(2)}</li>;
-    }
-    if (trimmed === '') return <br key={i} />;
-    return <p key={i} style={{ margin: '2px 0' }}>{line}</p>;
-  });
-}
+const mdComponents = {
+  h1: ({ children }) => <h1 style={{ fontSize: '18px', fontWeight: 700, color: '#200F3B', margin: '12px 0 6px' }}>{children}</h1>,
+  h2: ({ children }) => <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#200F3B', margin: '10px 0 4px' }}>{children}</h2>,
+  h3: ({ children }) => <h3 style={{ fontSize: '15px', fontWeight: 600, color: '#200F3B', margin: '8px 0 4px' }}>{children}</h3>,
+  p:  ({ children }) => <p style={{ margin: '4px 0', lineHeight: 1.7 }}>{children}</p>,
+  ul: ({ children }) => <ul style={{ marginLeft: 20, marginTop: 4, marginBottom: 4 }}>{children}</ul>,
+  ol: ({ children }) => <ol style={{ marginLeft: 20, marginTop: 4, marginBottom: 4 }}>{children}</ol>,
+  li: ({ children }) => <li style={{ marginBottom: 3, lineHeight: 1.6 }}>{children}</li>,
+  strong: ({ children }) => <strong style={{ fontWeight: 700, color: '#200F3B' }}>{children}</strong>,
+  table: ({ children }) => (
+    <div style={{ overflowX: 'auto', margin: '8px 0' }}>
+      <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '13px' }}>{children}</table>
+    </div>
+  ),
+  th: ({ children }) => (
+    <th style={{ border: '1px solid #e5e7eb', padding: '7px 12px', background: '#f9fafb', fontWeight: 600, textAlign: 'left' }}>{children}</th>
+  ),
+  td: ({ children }) => (
+    <td style={{ border: '1px solid #e5e7eb', padding: '7px 12px' }}>{children}</td>
+  ),
+  code: ({ inline, children }) => inline
+    ? <code style={{ background: '#f3f4f6', padding: '1px 5px', borderRadius: '4px', fontSize: '13px', fontFamily: 'ui-monospace, monospace' }}>{children}</code>
+    : <pre style={{ background: '#f3f4f6', padding: '10px 14px', borderRadius: '6px', overflowX: 'auto', fontSize: '13px', fontFamily: 'ui-monospace, monospace', margin: '6px 0' }}><code>{children}</code></pre>,
+  blockquote: ({ children }) => (
+    <blockquote style={{ borderLeft: '3px solid #d1d5db', margin: '6px 0', paddingLeft: 12, color: '#6b7280' }}>{children}</blockquote>
+  ),
+};
+
+const SUPPRESS_TEXT_TYPES = new Set(['question', 'study_plan_question', 'tutor_start', 'study_plan', 'flashcard_topic', 'concept_topic']);
 
 export default function ChatMessage({ message, onChipSelect }) {
   const { role, parsed, followUps } = message;
@@ -82,9 +98,11 @@ export default function ChatMessage({ message, onChipSelect }) {
           color: '#200F3B',
           lineHeight: 1.6,
         }}>
-          {parsed.text && parsed.type !== 'question' && parsed.type !== 'study_plan_question' && parsed.type !== 'tutor_start' && parsed.type !== 'study_plan' && parsed.type !== 'flashcard_topic' && parsed.type !== 'concept_topic' && (
+          {parsed.text && !SUPPRESS_TEXT_TYPES.has(parsed.type) && (
             <div style={{ marginBottom: parsed.type !== 'text' ? 16 : 0 }}>
-              {renderText(parsed.text)}
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+                {parsed.text}
+              </ReactMarkdown>
             </div>
           )}
 
