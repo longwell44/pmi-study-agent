@@ -167,7 +167,7 @@ export default function App() {
     };
 
     const newMode = detectMode(text);
-    setCurrentMode(newMode);
+    if (newMode !== 'General Study') setCurrentMode(newMode);
 
     if (screen === 'welcome') setScreen('chat');
 
@@ -182,7 +182,7 @@ export default function App() {
     try {
       const raw = await callApi(fullApiMessages, userContext);
       const parsed = parseResponse(raw);
-      const followUps = getFollowUps(parsed);
+      const followUps = getFollowUps(parsed, newMode !== 'General Study' ? newMode : currentMode);
 
       setMessages((prev) => [
         ...prev,

@@ -67,25 +67,20 @@ export function detectMode(userMessage) {
   return 'General Study';
 }
 
-export function getFollowUps(parsedResponse) {
+const MODE_CHIPS = {
+  'Practice Questions': ['Give me another question', 'Make it harder', 'Explain the PMI reasoning'],
+  'Flashcards':         ['Give me more cards on this topic', 'Switch to a different topic', 'Test me on these'],
+  'Tutor Mode':         ['Ask me a harder follow-up', 'Move to a different topic', 'How did I do overall?'],
+  'Study Planning':     ['Adjust my timeline', 'Focus on my weak area', 'Give me a practice question for week 1'],
+  'Exam Overview':      ['What does the ECO cover?', 'How is it scored?', 'Give me a practice question'],
+  'Concept Review':     ['Give me an example', 'How does this show up on the exam?', 'Explain another concept'],
+};
+
+export function getFollowUps(parsedResponse, mode) {
   if (parsedResponse.type === 'study_plan_question' || parsedResponse.type === 'tutor_start' || parsedResponse.type === 'study_plan' || parsedResponse.type === 'flashcard_topic') {
     return [];
   }
-  if (parsedResponse.type === 'question') {
-    const domain = parsedResponse.data?.domain;
-    return [
-      'Give me another practice question',
-      domain ? `More questions from the ${domain} domain` : 'Explain the concept behind this question',
-      'What are common traps on questions like this?',
-    ].filter(Boolean);
-  }
-  if (parsedResponse.type === 'flashcards') {
-    return [
-      'Generate more flashcards on this topic',
-      'Give me a practice question on this topic',
-      'Explain the most important concept from these cards',
-    ];
-  }
+  if (mode && MODE_CHIPS[mode]) return MODE_CHIPS[mode];
   return [
     'Give me a practice question',
     'Generate flashcards on this topic',
