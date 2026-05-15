@@ -65,6 +65,15 @@ function getRecommended(stage, struggle) {
 }
 
 
+const MODE_DESCRIPTORS = {
+  'Tutor Mode':        "Ask me anything and I'll respond like a tutor — probing your thinking, correcting gaps, and pushing you one level deeper.",
+  'Practice Questions':"I'll give you a realistic PMP-style scenario question with four options. Select your answer and I'll explain exactly why it's right or wrong.",
+  'Flashcards':        "Pick a topic and I'll create a set of study cards you can flip through to reinforce key concepts and definitions.",
+  'Concept Review':    "Ask me about any framework, principle, or performance domain and I'll break it down clearly with real-world context.",
+  'Study Planning':    "Answer a few quick questions and I'll build you a personalized week-by-week study plan based on your timeline and weak areas.",
+  'Exam Overview':     "Learn how the exam is organized — the ECO domains, question types, scoring, and what PMI is actually testing.",
+};
+
 function getInitialState() {
   try {
     const stage = sessionStorage.getItem('onboarding_stage');
@@ -257,6 +266,22 @@ export default function App() {
             </>
           ) : (
             <>
+              {MODE_DESCRIPTORS[currentMode] && (
+                <div style={{
+                  padding: '12px 24px 0',
+                  flexShrink: 0,
+                }}>
+                  <p style={{
+                    fontSize: '12px',
+                    color: '#9ca3af',
+                    margin: 0,
+                    lineHeight: 1.6,
+                  }}>
+                    {MODE_DESCRIPTORS[currentMode]}
+                  </p>
+                  <div style={{ marginTop: 10, borderBottom: '1px solid #f3f4f6' }} />
+                </div>
+              )}
               <div style={{
                 flex: 1,
                 overflowY: 'auto',

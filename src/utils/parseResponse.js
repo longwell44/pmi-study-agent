@@ -58,6 +58,7 @@ export function parseResponse(text) {
 
 export function detectMode(userMessage) {
   const msg = userMessage.toLowerCase();
+  if (msg.includes('tutor')) return 'Tutor Mode';
   if (msg.includes('practice question') || msg.includes('quiz me') || msg.includes('test me')) return 'Practice Questions';
   if (msg.includes('flashcard')) return 'Flashcards';
   if (msg.includes('study plan')) return 'Study Planning';
