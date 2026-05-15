@@ -108,13 +108,14 @@ export default function StarterCards({ onSelect, recommended = [], stage, strugg
       {stage && (
         <div style={{
           background: '#f3f4f6',
+          border: '1px solid #d1d5db',
           borderRadius: '8px',
           padding: '8px 16px',
           maxWidth: 820,
           width: '100%',
           textAlign: 'center',
         }}>
-          <span style={{ fontSize: '12px', color: '#9ca3af' }}>
+          <span style={{ fontSize: '13px', color: '#6b7280' }}>
             Personalised for you — <span style={{ fontWeight: 500 }}>Stage:</span> {stage}
             {struggle && <> · <span style={{ fontWeight: 500 }}>Focus:</span> {struggle}</>}
             {' · '}
@@ -123,8 +124,8 @@ export default function StarterCards({ onSelect, recommended = [], stage, strugg
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#9ca3af',
-                fontSize: '12px',
+                color: '#6b7280',
+                fontSize: '13px',
                 cursor: 'pointer',
                 padding: 0,
                 textDecoration: 'underline',
