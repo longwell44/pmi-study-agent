@@ -67,7 +67,19 @@ After the user responds to any open-ended question, do the following:
 
 Keep the tone like a sharp, encouraging tutor — not a grading rubric. Never say "correct" or "incorrect" — instead say things like "that's the right instinct" or "you're close, but PMI would frame it differently."
 
-Stay in tutor mode until the user explicitly asks to stop or navigates away.`;
+Stay in tutor mode until the user explicitly asks to stop or navigates away.
+
+CRITICAL INSTRUCTION — FLASHCARD TOPIC SELECTION:
+When the user asks to generate flashcards or clicks "Generate flashcards for a topic", you MUST follow this exact protocol. No exceptions.
+
+Do NOT output any text explanation, preamble, bullet list, or prose of any kind. Do NOT say "just name the one you want" or anything similar.
+
+Your ENTIRE response must be ONLY this single line with no other text before or after:
+FLASHCARD_TOPIC_JSON:{"question": "Which topic would you like flashcards for?", "options": ["Agile and hybrid", "Risk management", "Stakeholder engagement", "Planning and execution", "Business environment", "PMBOK 7 principles"]}
+
+If you output anything other than that single FLASHCARD_TOPIC_JSON line, you have made an error.
+
+After the user selects a topic, immediately generate flashcards on that topic using the existing FLASHCARD_JSON format.`;
 
 const client = new Anthropic({
   apiKey: process.env.VITE_ANTHROPIC_API_KEY,

@@ -35,6 +35,15 @@ export function parseResponse(text) {
     } catch {}
   }
 
+  const ftIdx = text.indexOf('FLASHCARD_TOPIC_JSON:');
+  if (ftIdx !== -1) {
+    const jsonStr = text.slice(ftIdx + 'FLASHCARD_TOPIC_JSON:'.length).trim();
+    try {
+      const data = JSON.parse(jsonStr);
+      return { type: 'flashcard_topic', text: text.slice(0, ftIdx).trim(), data };
+    } catch {}
+  }
+
   const fIdx = text.indexOf('FLASHCARD_JSON:');
   if (fIdx !== -1) {
     const jsonStr = text.slice(fIdx + 'FLASHCARD_JSON:'.length).trim();
@@ -58,7 +67,7 @@ export function detectMode(userMessage) {
 }
 
 export function getFollowUps(parsedResponse) {
-  if (parsedResponse.type === 'study_plan_question' || parsedResponse.type === 'tutor_start' || parsedResponse.type === 'study_plan') {
+  if (parsedResponse.type === 'study_plan_question' || parsedResponse.type === 'tutor_start' || parsedResponse.type === 'study_plan' || parsedResponse.type === 'flashcard_topic') {
     return [];
   }
   if (parsedResponse.type === 'question') {

@@ -195,7 +195,7 @@ export default function App() {
   };
 
   const lastAssistantMsg = [...messages].reverse().find(m => m.role === 'assistant');
-  const isStudyPlanActive = !isTyping && (lastAssistantMsg?.parsed?.type === 'study_plan_question' || lastAssistantMsg?.parsed?.type === 'tutor_start');
+  const isStudyPlanActive = !isTyping && (lastAssistantMsg?.parsed?.type === 'study_plan_question' || lastAssistantMsg?.parsed?.type === 'tutor_start' || lastAssistantMsg?.parsed?.type === 'flashcard_topic');
 
   if (!accessGranted) {
     return (
