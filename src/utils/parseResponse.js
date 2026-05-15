@@ -1,4 +1,13 @@
 export function parseResponse(text) {
+  const ctIdx = text.indexOf('CONCEPT_TOPIC_JSON:');
+  if (ctIdx !== -1) {
+    const jsonStr = text.slice(ctIdx + 'CONCEPT_TOPIC_JSON:'.length).trim();
+    try {
+      const data = JSON.parse(jsonStr);
+      return { type: 'concept_topic', text: text.slice(0, ctIdx).trim(), data };
+    } catch {}
+  }
+
   const planIdx = text.indexOf('STUDY_PLAN_JSON:');
   if (planIdx !== -1) {
     const jsonStr = text.slice(planIdx + 'STUDY_PLAN_JSON:'.length).trim();
@@ -77,7 +86,7 @@ const MODE_CHIPS = {
 };
 
 export function getFollowUps(parsedResponse, mode) {
-  if (parsedResponse.type === 'study_plan_question' || parsedResponse.type === 'tutor_start' || parsedResponse.type === 'study_plan' || parsedResponse.type === 'flashcard_topic') {
+  if (parsedResponse.type === 'study_plan_question' || parsedResponse.type === 'tutor_start' || parsedResponse.type === 'study_plan' || parsedResponse.type === 'flashcard_topic' || parsedResponse.type === 'concept_topic') {
     return [];
   }
   if (mode && MODE_CHIPS[mode]) return MODE_CHIPS[mode];

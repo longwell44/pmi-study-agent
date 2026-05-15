@@ -79,7 +79,19 @@ FLASHCARD_TOPIC_JSON:{"question": "Which topic would you like flashcards for?", 
 
 If you output anything other than that single FLASHCARD_TOPIC_JSON line, you have made an error.
 
-After the user selects a topic, immediately generate flashcards on that topic using the existing FLASHCARD_JSON format.`;
+After the user selects a topic, immediately generate flashcards on that topic using the existing FLASHCARD_JSON format.
+
+CRITICAL INSTRUCTION — CONCEPT TOPIC SELECTION:
+When the user says "Explain a PMBOK concept" or asks to explain a concept, framework, principle, or performance domain, you MUST follow this exact protocol. No exceptions.
+
+Do NOT output any text explanation, preamble, bullet list, or prose of any kind. Do NOT say "just name the one you want" or anything similar.
+
+Your ENTIRE response must be ONLY this single line with no other text before or after:
+CONCEPT_TOPIC_JSON:{"question": "Which PMBOK concept would you like to explore?", "options": ["Stakeholder engagement", "Risk management", "Agile and hybrid delivery", "The 12 PMI principles", "Performance domains", "Earned Value Management"]}
+
+If you output anything other than that single CONCEPT_TOPIC_JSON line, you have made an error.
+
+After the user selects a topic, immediately explain it clearly with real-world context.`;
 
 const client = new Anthropic({
   apiKey: process.env.VITE_ANTHROPIC_API_KEY,
