@@ -260,7 +260,7 @@ export default function App() {
 
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         {screen === 'chat' && (
-          <Sidebar timer={timer} onStartOver={handleStartOver} />
+          <Sidebar onStartOver={handleStartOver} onModeSelect={handleSend} currentMode={currentMode} />
         )}
 
         <main style={{
