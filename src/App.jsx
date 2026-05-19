@@ -11,7 +11,7 @@ import OnboardingTransition from './components/OnboardingTransition.jsx';
 import { useSessionTimer } from './hooks/useSessionTimer.js';
 import { parseResponse, detectMode, getFollowUps } from './utils/parseResponse.js';
 import { loadProgress, recordAnswer } from './utils/progress.js';
-import PracticeProgressBar from './components/PracticeProgressBar.jsx';
+import MyProgress from './components/MyProgress.jsx';
 
 const CONTEXT_MAP = {
   "Just starting to explore": {
@@ -127,6 +127,8 @@ export default function App() {
   const [onboardingStage, setOnboardingStage] = useState(initial.stage);
   const [onboardingStruggle, setOnboardingStruggle] = useState(initial.struggle);
   const [practiceProgress, setPracticeProgress] = useState(() => loadProgress());
+  const [flashcardProgress, setFlashcardProgress] = useState(null);
+  const [activeTab, setActiveTab] = useState('study');
   const bottomRef = useRef(null);
   const lastMsgRef = useRef(null);
   const { formatted: timer, reset: resetTimer } = useSessionTimer();
@@ -212,15 +214,27 @@ export default function App() {
     setPracticeProgress(updated);
   };
 
+  const handleFlashcardProgress = (current, total) => {
+    setFlashcardProgress({ current, total });
+  };
+
   const handleStartOver = () => {
     setMessages([]);
     setScreen('welcome');
     setCurrentMode('General Study');
+    setFlashcardProgress(null);
+    setActiveTab('study');
     setError(null);
     resetTimer();
   };
 
   const lastAssistantMsg = [...messages].reverse().find(m => m.role === 'assistant');
+  const tutorMeta = (() => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].parsed?.type === 'tutor_scenario') return messages[i].parsed.meta;
+    }
+    return null;
+  })();
   const isStudyPlanActive = !isTyping && (lastAssistantMsg?.parsed?.type === 'study_plan_question' || lastAssistantMsg?.parsed?.type === 'tutor_start' || lastAssistantMsg?.parsed?.type === 'flashcard_topic' || lastAssistantMsg?.parsed?.type === 'concept_topic');
 
   if (!accessGranted) {
@@ -254,13 +268,25 @@ export default function App() {
     );
   }
 
+  const handleReviewMissed = (missed) => {
+    setActiveTab('study');
+    handleSend(`Generate flashcards focusing on the concepts I struggled with: ${missed.join('; ')}`);
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
-      <Header timer={timer} onHome={handleStartOver} />
+      <Header timer={timer} onHome={handleStartOver} activeTab={activeTab} onTabChange={setActiveTab} />
 
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         {screen === 'chat' && (
-          <Sidebar onStartOver={handleStartOver} onModeSelect={handleSend} currentMode={currentMode} />
+          <Sidebar
+            onStartOver={handleStartOver}
+            onModeSelect={(prompt) => { setActiveTab('study'); handleSend(prompt); }}
+            currentMode={currentMode}
+            practiceProgress={practiceProgress}
+            tutorMeta={currentMode === 'Tutor Mode' ? tutorMeta : null}
+            flashcardProgress={currentMode === 'Flashcards' ? flashcardProgress : null}
+          />
         )}
 
         <main style={{
@@ -270,7 +296,9 @@ export default function App() {
           overflow: 'hidden',
           background: '#f9fafb',
         }}>
-          {screen === 'welcome' ? (
+          {activeTab === 'progress' ? (
+            <MyProgress onReviewMissed={handleReviewMissed} />
+          ) : screen === 'welcome' ? (
             <>
               <div style={{ flex: 1, overflowY: 'auto' }}>
                 <StarterCards
@@ -313,21 +341,6 @@ export default function App() {
                   </div>
                 )}
 
-                {/* Progress bar — sticky once mode descriptor scrolls out of view */}
-                {currentMode === 'Practice Questions' && (
-                  <div style={{
-                    position: 'sticky',
-                    top: 0,
-                    zIndex: 10,
-                    background: '#f9fafb',
-                    padding: '8px 0',
-                  }}>
-                    <div style={{ maxWidth: '960px', margin: '0 auto', width: '100%', padding: '0 24px' }}>
-                      <PracticeProgressBar progress={practiceProgress} />
-                    </div>
-                  </div>
-                )}
-
                 {/* Chat messages */}
                 <div style={{
                   maxWidth: '960px',
@@ -340,7 +353,7 @@ export default function App() {
                 }}>
                   {messages.map((msg, idx) => (
                     <div key={msg.id} ref={idx === messages.length - 1 ? lastMsgRef : null}>
-                      <ChatMessage message={msg} onChipSelect={handleSend} onAnswer={handleAnswer} />
+                      <ChatMessage message={msg} onChipSelect={handleSend} onAnswer={handleAnswer} onFlashcardProgress={handleFlashcardProgress} />
                     </div>
                   ))}
                   {isTyping && <TypingIndicator />}

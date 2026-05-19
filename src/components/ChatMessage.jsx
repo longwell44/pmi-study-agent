@@ -41,7 +41,7 @@ const mdComponents = {
 
 const SUPPRESS_TEXT_TYPES = new Set(['question', 'study_plan_question', 'tutor_start', 'study_plan', 'flashcard_topic', 'concept_topic', 'tutor_scenario', 'tutor_feedback']);
 
-export default function ChatMessage({ message, onChipSelect, onAnswer }) {
+export default function ChatMessage({ message, onChipSelect, onAnswer, onFlashcardProgress }) {
   const { role, parsed, followUps } = message;
   const isUser = role === 'user';
 
@@ -103,7 +103,7 @@ export default function ChatMessage({ message, onChipSelect, onAnswer }) {
           )}
 
           {parsed.type === 'flashcards' && parsed.data && (
-            <Flashcard cards={parsed.data} onChipSelect={onChipSelect} />
+            <Flashcard cards={parsed.data} onChipSelect={onChipSelect} onProgress={onFlashcardProgress} />
           )}
 
           {parsed.type === 'study_plan_question' && parsed.data && (

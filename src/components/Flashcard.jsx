@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function saveResult(front, result) {
   try {
@@ -71,13 +71,17 @@ const footerStyle = {
   padding: '0 16px',
 };
 
-export default function Flashcard({ cards, onChipSelect }) {
+export default function Flashcard({ cards, onChipSelect, onProgress }) {
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [results, setResults] = useState(() => new Array(cards.length).fill(null));
   const [done, setDone] = useState(false);
   // feedback: null | { result: string, phase: 'highlight'|'message'|'fading' }
   const [feedback, setFeedback] = useState(null);
+
+  useEffect(() => {
+    onProgress?.(done ? cards.length : index + 1, cards.length);
+  }, [index, done, cards.length]);
 
   if (!cards || cards.length === 0) return null;
 
