@@ -83,6 +83,17 @@ export default function ChatMessage({ message, onChipSelect, onAnswer }) {
     );
   }
 
+  if (parsed.type === 'tutor_scenario') {
+    return (
+      <div className="msg-enter" style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '2px 0' }}>
+        <div style={{ ...avatarStyle, marginTop: 2 }}>P</div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <TutorScenario text={parsed.text} meta={parsed.meta} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="msg-enter" style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '2px 0' }}>
       <div style={{ ...avatarStyle, marginTop: 2 }}>P</div>
@@ -134,10 +145,6 @@ export default function ChatMessage({ message, onChipSelect, onAnswer }) {
 
           {parsed.type === 'concept_topic' && parsed.data && (
             <ConceptTopic data={parsed.data} onSelect={onChipSelect} />
-          )}
-
-          {parsed.type === 'tutor_scenario' && (
-            <TutorScenario text={parsed.text} meta={parsed.meta} />
           )}
 
           {parsed.type === 'tutor_feedback' && parsed.data && (
