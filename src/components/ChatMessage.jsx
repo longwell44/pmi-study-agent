@@ -10,19 +10,6 @@ import ConceptTopic from './ConceptTopic.jsx';
 import TutorScenario from './TutorScenario.jsx';
 import TutorFeedback from './TutorFeedback.jsx';
 
-const avatarStyle = {
-  width: 28,
-  height: 28,
-  borderRadius: '50%',
-  background: '#e5e7eb',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontSize: 11,
-  fontWeight: 600,
-  color: '#6b7280',
-  flexShrink: 0,
-};
 
 const mdComponents = {
   h1: ({ children }) => <h1 style={{ fontSize: '18px', fontWeight: 700, color: '#200F3B', margin: '12px 0 6px' }}>{children}</h1>,
@@ -63,8 +50,6 @@ export default function ChatMessage({ message, onChipSelect, onAnswer }) {
       <div className="msg-enter" style={{
         display: 'flex',
         justifyContent: 'flex-end',
-        alignItems: 'flex-end',
-        gap: 8,
         padding: '2px 0',
       }}>
         <div style={{
@@ -78,27 +63,21 @@ export default function ChatMessage({ message, onChipSelect, onAnswer }) {
         }}>
           {parsed.text}
         </div>
-        <div style={avatarStyle}>U</div>
       </div>
     );
   }
 
   if (parsed.type === 'tutor_scenario') {
     return (
-      <div className="msg-enter" style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '2px 0' }}>
-        <div style={{ ...avatarStyle, marginTop: 2 }}>P</div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <TutorScenario text={parsed.text} meta={parsed.meta} />
-        </div>
+      <div className="msg-enter" style={{ padding: '2px 0' }}>
+        <TutorScenario text={parsed.text} meta={parsed.meta} />
       </div>
     );
   }
 
   return (
-    <div className="msg-enter" style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '2px 0' }}>
-      <div style={{ ...avatarStyle, marginTop: 2 }}>P</div>
-
-      <div style={{ flex: 1, minWidth: 0 }}>
+    <div className="msg-enter" style={{ padding: '2px 0' }}>
+      <div style={{ minWidth: 0 }}>
         <div style={{
           background: '#ffffff',
           borderTop: '1px solid #e5e7eb',
