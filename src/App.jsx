@@ -10,6 +10,8 @@ import Onboarding from './components/Onboarding.jsx';
 import OnboardingTransition from './components/OnboardingTransition.jsx';
 import { useSessionTimer } from './hooks/useSessionTimer.js';
 import { parseResponse, detectMode, getFollowUps } from './utils/parseResponse.js';
+import { loadProgress, recordAnswer } from './utils/progress.js';
+import PracticeProgressBar from './components/PracticeProgressBar.jsx';
 
 const CONTEXT_MAP = {
   "Just starting to explore": {
@@ -124,6 +126,7 @@ export default function App() {
   );
   const [onboardingStage, setOnboardingStage] = useState(initial.stage);
   const [onboardingStruggle, setOnboardingStruggle] = useState(initial.struggle);
+  const [practiceProgress, setPracticeProgress] = useState(() => loadProgress());
   const bottomRef = useRef(null);
   const lastMsgRef = useRef(null);
   const { formatted: timer, reset: resetTimer } = useSessionTimer();
@@ -204,6 +207,11 @@ export default function App() {
     }
   };
 
+  const handleAnswer = (domain, isCorrect) => {
+    const updated = recordAnswer(domain, isCorrect);
+    setPracticeProgress(updated);
+  };
+
   const handleStartOver = () => {
     setMessages([]);
     setScreen('welcome');
@@ -264,71 +272,93 @@ export default function App() {
         }}>
           {screen === 'welcome' ? (
             <>
-              <StarterCards
-                onSelect={handleSend}
-                recommended={getRecommended(onboardingStage, onboardingStruggle)}
-                stage={onboardingStage}
-                struggle={onboardingStruggle}
-                onEdit={handleEditOnboarding}
-              />
+              <div style={{ flex: 1, overflowY: 'auto' }}>
+                <StarterCards
+                  onSelect={handleSend}
+                  recommended={getRecommended(onboardingStage, onboardingStruggle)}
+                  stage={onboardingStage}
+                  struggle={onboardingStruggle}
+                  onEdit={handleEditOnboarding}
+                />
+              </div>
               <MessageInput onSend={handleSend} disabled={isTyping} maxWidth={820} placeholder={MODE_PLACEHOLDERS[currentMode] ?? 'Ask anything about the PMP exam…'} />
             </>
           ) : (
             <>
-              {MODE_DESCRIPTORS[currentMode] && (
-                <div style={{
-                  padding: '16px 24px 0',
-                  flexShrink: 0,
-                  textAlign: 'center',
-                }}>
-                  <p style={{
-                    fontSize: '11px',
-                    fontWeight: 600,
-                    color: '#9ca3af',
-                    letterSpacing: '0.6px',
-                    textTransform: 'uppercase',
-                    margin: '0 0 4px',
-                  }}>
-                    {currentMode}
-                  </p>
-                  <p style={{
-                    fontSize: '12px',
-                    color: '#9ca3af',
-                    margin: 0,
-                    lineHeight: 1.6,
-                  }}>
-                    {MODE_DESCRIPTORS[currentMode]}
-                  </p>
-                  <div style={{ marginTop: 12, borderBottom: '1px solid #f3f4f6' }} />
-                </div>
-              )}
-              <div style={{
-                flex: 1,
-                overflowY: 'auto',
-                padding: '24px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 12,
-              }}>
-                {messages.map((msg, idx) => (
-                  <div key={msg.id} ref={idx === messages.length - 1 ? lastMsgRef : null}>
-                    <ChatMessage message={msg} onChipSelect={handleSend} />
-                  </div>
-                ))}
-                {isTyping && <TypingIndicator />}
-                {error && (
-                  <div style={{
-                    padding: '10px 14px',
-                    background: '#fef2f2',
-                    border: '1px solid #dc2626',
-                    borderRadius: '6px',
-                    color: '#dc2626',
-                    fontSize: '13px',
-                  }}>
-                    Error: {error}. Check that your API key is set in <code>.env</code>.
+              <div style={{ flex: 1, overflowY: 'auto' }}>
+
+                {/* Mode label + description — scrolls away naturally */}
+                {MODE_DESCRIPTORS[currentMode] && (
+                  <div style={{ maxWidth: '960px', margin: '0 auto', width: '100%', padding: '24px 24px 0' }}>
+                    <div style={{ textAlign: 'center', paddingBottom: 16, borderBottom: '1px solid #f3f4f6', marginBottom: 16 }}>
+                      <p style={{
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        color: '#9ca3af',
+                        letterSpacing: '0.6px',
+                        textTransform: 'uppercase',
+                        margin: '0 0 4px',
+                      }}>
+                        {currentMode}
+                      </p>
+                      <p style={{
+                        fontSize: '12px',
+                        color: '#9ca3af',
+                        margin: 0,
+                        lineHeight: 1.6,
+                      }}>
+                        {MODE_DESCRIPTORS[currentMode]}
+                      </p>
+                    </div>
                   </div>
                 )}
-                <div ref={bottomRef} />
+
+                {/* Progress bar — sticky once mode descriptor scrolls out of view */}
+                {currentMode === 'Practice Questions' && (
+                  <div style={{
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 10,
+                    background: '#f9fafb',
+                    padding: '8px 0',
+                  }}>
+                    <div style={{ maxWidth: '960px', margin: '0 auto', width: '100%', padding: '0 24px' }}>
+                      <PracticeProgressBar progress={practiceProgress} />
+                    </div>
+                  </div>
+                )}
+
+                {/* Chat messages */}
+                <div style={{
+                  maxWidth: '960px',
+                  margin: '0 auto',
+                  width: '100%',
+                  padding: '12px 24px 24px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 12,
+                }}>
+                  {messages.map((msg, idx) => (
+                    <div key={msg.id} ref={idx === messages.length - 1 ? lastMsgRef : null}>
+                      <ChatMessage message={msg} onChipSelect={handleSend} onAnswer={handleAnswer} />
+                    </div>
+                  ))}
+                  {isTyping && <TypingIndicator />}
+                  {error && (
+                    <div style={{
+                      padding: '10px 14px',
+                      background: '#fef2f2',
+                      border: '1px solid #dc2626',
+                      borderRadius: '6px',
+                      color: '#dc2626',
+                      fontSize: '13px',
+                    }}>
+                      Error: {error}. Check that your API key is set in <code>.env</code>.
+                    </div>
+                  )}
+                  <div ref={bottomRef} />
+                </div>
+
               </div>
 
               {!isStudyPlanActive && <MessageInput onSend={handleSend} disabled={isTyping} placeholder={MODE_PLACEHOLDERS[currentMode] ?? 'Ask anything about the PMP exam…'} />}

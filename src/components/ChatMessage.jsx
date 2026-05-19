@@ -7,6 +7,8 @@ import StudyPlanQuestion from './StudyPlanQuestion.jsx';
 import StudyPlanCard from './StudyPlanCard.jsx';
 import FlashcardTopic from './FlashcardTopic.jsx';
 import ConceptTopic from './ConceptTopic.jsx';
+import TutorScenario from './TutorScenario.jsx';
+import TutorFeedback from './TutorFeedback.jsx';
 
 const avatarStyle = {
   width: 28,
@@ -50,9 +52,9 @@ const mdComponents = {
   ),
 };
 
-const SUPPRESS_TEXT_TYPES = new Set(['question', 'study_plan_question', 'tutor_start', 'study_plan', 'flashcard_topic', 'concept_topic']);
+const SUPPRESS_TEXT_TYPES = new Set(['question', 'study_plan_question', 'tutor_start', 'study_plan', 'flashcard_topic', 'concept_topic', 'tutor_scenario', 'tutor_feedback']);
 
-export default function ChatMessage({ message, onChipSelect }) {
+export default function ChatMessage({ message, onChipSelect, onAnswer }) {
   const { role, parsed, followUps } = message;
   const isUser = role === 'user';
 
@@ -107,11 +109,11 @@ export default function ChatMessage({ message, onChipSelect }) {
           )}
 
           {parsed.type === 'question' && parsed.data && (
-            <PracticeQuestion data={parsed.data} />
+            <PracticeQuestion data={parsed.data} onAnswer={onAnswer} />
           )}
 
           {parsed.type === 'flashcards' && parsed.data && (
-            <Flashcard cards={parsed.data} />
+            <Flashcard cards={parsed.data} onChipSelect={onChipSelect} />
           )}
 
           {parsed.type === 'study_plan_question' && parsed.data && (
@@ -132,6 +134,14 @@ export default function ChatMessage({ message, onChipSelect }) {
 
           {parsed.type === 'concept_topic' && parsed.data && (
             <ConceptTopic data={parsed.data} onSelect={onChipSelect} />
+          )}
+
+          {parsed.type === 'tutor_scenario' && (
+            <TutorScenario text={parsed.text} meta={parsed.meta} />
+          )}
+
+          {parsed.type === 'tutor_feedback' && parsed.data && (
+            <TutorFeedback text={parsed.text} data={parsed.data} />
           )}
         </div>
 

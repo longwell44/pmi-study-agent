@@ -1,3 +1,24 @@
+// Finds the first complete JSON object in text starting from index 0.
+// Returns { json: string, end: number } or null.
+function extractFirstJson(text) {
+  const start = text.indexOf('{');
+  if (start === -1) return null;
+  let depth = 0;
+  let inString = false;
+  let escape = false;
+  for (let i = start; i < text.length; i++) {
+    const ch = text[i];
+    if (escape) { escape = false; continue; }
+    if (ch === '\\' && inString) { escape = true; continue; }
+    if (ch === '"') { inString = !inString; continue; }
+    if (!inString) {
+      if (ch === '{') depth++;
+      else if (ch === '}') { depth--; if (depth === 0) return { json: text.slice(start, i + 1), end: i }; }
+    }
+  }
+  return null;
+}
+
 export function parseResponse(text) {
   const ctIdx = text.indexOf('CONCEPT_TOPIC_JSON:');
   if (ctIdx !== -1) {
@@ -24,6 +45,31 @@ export function parseResponse(text) {
       const data = JSON.parse(jsonStr);
       return { type: 'tutor_start', text: text.slice(0, tsIdx).trim(), data };
     } catch {}
+  }
+
+  const tmIdx = text.indexOf('TUTOR_META:');
+  if (tmIdx !== -1) {
+    const afterTag = text.slice(tmIdx + 'TUTOR_META:'.length).trimStart();
+    const result = extractFirstJson(afterTag);
+    if (result) {
+      try {
+        const meta = JSON.parse(result.json);
+        const remaining = afterTag.slice(result.end + 1).trim();
+        return { type: 'tutor_scenario', text: remaining, meta };
+      } catch {}
+    }
+  }
+
+  const tfIdx = text.indexOf('TUTOR_FEEDBACK:');
+  if (tfIdx !== -1) {
+    const afterTag = text.slice(tfIdx + 'TUTOR_FEEDBACK:'.length).trimStart();
+    const result = extractFirstJson(afterTag);
+    if (result) {
+      try {
+        const data = JSON.parse(result.json);
+        return { type: 'tutor_feedback', text: text.slice(0, tfIdx).trim(), data };
+      } catch {}
+    }
   }
 
   const spIdx = text.indexOf('STUDY_PLAN_QUESTION_JSON:');
@@ -86,7 +132,7 @@ const MODE_CHIPS = {
 };
 
 export function getFollowUps(parsedResponse, mode) {
-  if (parsedResponse.type === 'study_plan_question' || parsedResponse.type === 'tutor_start' || parsedResponse.type === 'study_plan' || parsedResponse.type === 'flashcard_topic' || parsedResponse.type === 'concept_topic') {
+  if (['study_plan_question', 'tutor_start', 'study_plan', 'flashcard_topic', 'concept_topic', 'tutor_scenario'].includes(parsedResponse.type)) {
     return [];
   }
   if (mode && MODE_CHIPS[mode]) return MODE_CHIPS[mode];

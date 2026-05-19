@@ -58,15 +58,19 @@ input, textarea {
   -webkit-backface-visibility: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 0;
   border-radius: var(--radius);
   border: 1px solid var(--border);
+  border-top: 3px solid #00A9A5;
   background: #ffffff;
+  box-shadow: 0 4px 16px rgba(32, 15, 59, 0.10);
+  overflow: hidden;
 }
 
 .flashcard-face.back {
+  background: #F9F9F9;
   transform: rotateY(180deg);
 }
 

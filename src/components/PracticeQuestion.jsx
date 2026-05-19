@@ -2,13 +2,14 @@ import { useState } from 'react';
 
 const OPTION_LABELS = ['A', 'B', 'C', 'D'];
 
-export default function PracticeQuestion({ data }) {
+export default function PracticeQuestion({ data, onAnswer }) {
   const [selected, setSelected] = useState(null);
   const { question, options, correct, explanation, domain } = data;
 
   const handleSelect = (key) => {
     if (selected) return;
     setSelected(key);
+    onAnswer?.(domain, key === correct);
   };
 
   const getOptionStyle = (key) => {
