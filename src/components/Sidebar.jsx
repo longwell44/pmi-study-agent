@@ -234,7 +234,7 @@ function FlashcardContext({ flashcardProgress }) {
   );
 }
 
-export default function Sidebar({ onStartOver, onModeSelect, currentMode, practiceProgress, tutorMeta, flashcardProgress }) {
+export default function Sidebar({ onModeSelect, currentMode, practiceProgress, tutorMeta, flashcardProgress }) {
   const showContext = currentMode === 'Practice Questions' || (currentMode === 'Tutor Mode' && tutorMeta) || (currentMode === 'Flashcards' && flashcardProgress);
 
   return (
@@ -281,32 +281,6 @@ export default function Sidebar({ onStartOver, onModeSelect, currentMode, practi
         </div>
       )}
 
-      <div style={{ padding: '12px 16px 0', borderTop: '1px solid #f3f4f6' }}>
-        <button
-          onClick={onStartOver}
-          style={{
-            background: 'none',
-            border: 'none',
-            fontSize: '13px',
-            color: '#6b7280',
-            cursor: 'pointer',
-            padding: 0,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 5,
-          }}
-          onMouseEnter={e => e.currentTarget.style.color = '#200F3B'}
-          onMouseLeave={e => e.currentTarget.style.color = '#6b7280'}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
-            <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
-            <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
-          </svg>
-          Go Home
-        </button>
-      </div>
     </aside>
   );
 }

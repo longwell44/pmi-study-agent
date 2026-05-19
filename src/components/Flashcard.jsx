@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { recordFlashcardDeck } from '../utils/progress.js';
 
 function saveResult(front, result) {
   try {
@@ -107,6 +108,7 @@ export default function Flashcard({ cards, onChipSelect, onProgress }) {
     setTimeout(() => {
       setFeedback(null);
       if (allDone) {
+        recordFlashcardDeck();
         setDone(true);
       } else {
         setFlipped(false);

@@ -10,7 +10,7 @@ import Onboarding from './components/Onboarding.jsx';
 import OnboardingTransition from './components/OnboardingTransition.jsx';
 import { useSessionTimer } from './hooks/useSessionTimer.js';
 import { parseResponse, detectMode, getFollowUps } from './utils/parseResponse.js';
-import { loadProgress, recordAnswer } from './utils/progress.js';
+import { loadProgress, recordAnswer, recordTutorSession } from './utils/progress.js';
 import MyProgress from './components/MyProgress.jsx';
 
 const CONTEXT_MAP = {
@@ -181,7 +181,10 @@ export default function App() {
     };
 
     const newMode = detectMode(text);
-    if (newMode !== 'General Study') setCurrentMode(newMode);
+    if (newMode !== 'General Study') {
+      setCurrentMode(newMode);
+      if (newMode === 'Tutor Mode' && currentMode !== 'Tutor Mode') recordTutorSession();
+    }
 
     if (screen === 'welcome') setScreen('chat');
 
@@ -226,6 +229,21 @@ export default function App() {
     setActiveTab('study');
     setError(null);
     resetTimer();
+  };
+
+  const handleTabChange = (tab) => {
+    if (tab === 'progress') {
+      setActiveTab('progress');
+    } else if (tab === 'study') {
+      setActiveTab('study');
+      if (messages.length > 0) {
+        // Restore existing session
+        setScreen('chat');
+      } else {
+        // No session — start one immediately
+        handleSend('Give me a practice question');
+      }
+    }
   };
 
   const lastAssistantMsg = [...messages].reverse().find(m => m.role === 'assistant');
@@ -275,12 +293,11 @@ export default function App() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
-      <Header timer={timer} onHome={handleStartOver} activeTab={activeTab} onTabChange={setActiveTab} />
+      <Header timer={timer} onHome={handleStartOver} activeTab={activeTab} onTabChange={handleTabChange} screen={screen} />
 
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-        {screen === 'chat' && (
+        {screen === 'chat' && activeTab === 'study' && (
           <Sidebar
-            onStartOver={handleStartOver}
             onModeSelect={(prompt) => { setActiveTab('study'); handleSend(prompt); }}
             currentMode={currentMode}
             practiceProgress={practiceProgress}
@@ -297,7 +314,10 @@ export default function App() {
           background: '#f9fafb',
         }}>
           {activeTab === 'progress' ? (
-            <MyProgress onReviewMissed={handleReviewMissed} />
+            <MyProgress
+              onReviewMissed={handleReviewMissed}
+              onNavigate={(prompt) => { setActiveTab('study'); handleSend(prompt); }}
+            />
           ) : screen === 'welcome' ? (
             <>
               <div style={{ flex: 1, overflowY: 'auto' }}>

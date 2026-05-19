@@ -61,3 +61,35 @@ export function getStatusLabel(filled) {
   if (filled <= 4) return 'Developing';
   return 'Intermediate';
 }
+
+const HISTORY_KEY = 'pmi-history';
+
+function defaultHistory() {
+  return { tutorSessions: 0, flashcardDecks: 0 };
+}
+
+export function loadHistory() {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    if (!raw) return defaultHistory();
+    const parsed = JSON.parse(raw);
+    return {
+      tutorSessions: parsed.tutorSessions ?? 0,
+      flashcardDecks: parsed.flashcardDecks ?? 0,
+    };
+  } catch {
+    return defaultHistory();
+  }
+}
+
+export function recordTutorSession() {
+  const h = loadHistory();
+  h.tutorSessions += 1;
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch {}
+}
+
+export function recordFlashcardDeck() {
+  const h = loadHistory();
+  h.flashcardDecks += 1;
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch {}
+}
