@@ -94,16 +94,31 @@ export default function Header({ timer, onHome, activeTab, onTabChange, screen }
         )}
       </div>
 
-      {/* Right: timer */}
-      <span style={{
-        color: '#6b7280',
-        fontSize: '13px',
-        fontVariantNumeric: 'tabular-nums',
-        fontFamily: 'ui-monospace, monospace',
+      {/* Right: account pill */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        padding: '4px 12px 4px 4px',
+        borderRadius: '20px',
+        border: '1px solid #e5e7eb',
+        background: '#ffffff',
         flexShrink: 0,
       }}>
-        {timer}
-      </span>
+        <div style={{
+          width: 32,
+          height: 32,
+          borderRadius: '50%',
+          background: '#6B2D8B',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+        }}>
+          <span style={{ color: '#ffffff', fontSize: '11px', fontWeight: 600, letterSpacing: '0.3px' }}>JD</span>
+        </div>
+        <span style={{ fontSize: '14px', color: '#200F3B', whiteSpace: 'nowrap' }}>John Doe</span>
+      </div>
     </header>
   );
 }

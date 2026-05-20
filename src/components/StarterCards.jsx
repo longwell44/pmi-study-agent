@@ -107,7 +107,7 @@ export default function StarterCards({ onSelect, recommended = [], stage, strugg
           letterSpacing: '-0.3px',
           marginBottom: 8,
         }}>
-          Ready to ace the PMP?
+          Welcome, John — Ready to ace the PMP?
         </h1>
         <p style={{ color: '#6b7280', fontSize: '14px', lineHeight: 1.6 }}>
           Choose where to start, or type your own question below.
