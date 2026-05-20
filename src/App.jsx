@@ -12,6 +12,7 @@ import { useSessionTimer } from './hooks/useSessionTimer.js';
 import { parseResponse, detectMode, getFollowUps } from './utils/parseResponse.js';
 import { loadProgress, recordAnswer, recordTutorSession } from './utils/progress.js';
 import MyProgress from './components/MyProgress.jsx';
+import ModeEvent from './components/ModeEvent.jsx';
 
 const CONTEXT_MAP = {
   "Just starting to explore": {
@@ -181,6 +182,8 @@ export default function App() {
     };
 
     const newMode = detectMode(text);
+    const modeIsChanging = newMode !== 'General Study' && newMode !== currentMode;
+
     if (newMode !== 'General Study') {
       setCurrentMode(newMode);
       if (newMode === 'Tutor Mode' && currentMode !== 'Tutor Mode') recordTutorSession();
@@ -188,13 +191,21 @@ export default function App() {
 
     if (screen === 'welcome') setScreen('chat');
 
-    setMessages((prev) => [...prev, userMsg]);
+    setMessages((prev) => {
+      if (modeIsChanging) {
+        const modeEvent = { id: Date.now() - 1, role: 'mode_event', mode: newMode };
+        return [...prev, modeEvent, userMsg];
+      }
+      return [...prev, userMsg];
+    });
     setIsTyping(true);
 
-    const fullApiMessages = [...messages, userMsg].map((m) => ({
-      role: m.role,
-      content: m._raw ?? m.parsed.text,
-    }));
+    const fullApiMessages = [...messages, userMsg]
+      .filter((m) => m.role !== 'mode_event')
+      .map((m) => ({
+        role: m.role,
+        content: m._raw ?? m.parsed.text,
+      }));
 
     try {
       const raw = await callApi(fullApiMessages, userContext);
@@ -335,32 +346,6 @@ export default function App() {
             <>
               <div style={{ flex: 1, overflowY: 'auto' }}>
 
-                {/* Mode label + description — scrolls away naturally */}
-                {MODE_DESCRIPTORS[currentMode] && (
-                  <div style={{ maxWidth: '960px', margin: '0 auto', width: '100%', padding: '24px 24px 0' }}>
-                    <div style={{ textAlign: 'center', paddingBottom: 16, borderBottom: '1px solid #f3f4f6', marginBottom: 16 }}>
-                      <p style={{
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        color: '#9ca3af',
-                        letterSpacing: '0.6px',
-                        textTransform: 'uppercase',
-                        margin: '0 0 4px',
-                      }}>
-                        {currentMode}
-                      </p>
-                      <p style={{
-                        fontSize: '12px',
-                        color: '#9ca3af',
-                        margin: 0,
-                        lineHeight: 1.6,
-                      }}>
-                        {MODE_DESCRIPTORS[currentMode]}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
                 {/* Chat messages */}
                 <div style={{
                   maxWidth: '960px',
@@ -373,7 +358,10 @@ export default function App() {
                 }}>
                   {messages.map((msg, idx) => (
                     <div key={msg.id} ref={idx === messages.length - 1 ? lastMsgRef : null}>
-                      <ChatMessage message={msg} onChipSelect={handleSend} onAnswer={handleAnswer} onFlashcardProgress={handleFlashcardProgress} />
+                      {msg.role === 'mode_event'
+                        ? <ModeEvent mode={msg.mode} />
+                        : <ChatMessage message={msg} onChipSelect={handleSend} onAnswer={handleAnswer} onFlashcardProgress={handleFlashcardProgress} />
+                      }
                     </div>
                   ))}
                   {isTyping && <TypingIndicator />}

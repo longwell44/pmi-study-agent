@@ -1,5 +1,3 @@
-import { getDotsFilled } from '../utils/progress';
-
 const SECTIONS = [
   {
     label: 'Practice & Learn',
@@ -88,7 +86,6 @@ const SECTIONS = [
   },
 ];
 
-const DOMAINS = ['People', 'Process', 'Business Environment'];
 const PMI_AQUA = '#00A9A5';
 
 const sectionLabelStyle = {
@@ -138,45 +135,6 @@ function NavItem({ label, prompt, mode, icon, isActive, onModeSelect }) {
       <span style={{ flexShrink: 0, opacity: isActive ? 1 : 0.65 }}>{icon}</span>
       {label}
     </button>
-  );
-}
-
-function PracticeContext({ practiceProgress }) {
-  const { questionsAttempted, correctCount, domains } = practiceProgress;
-  const score = questionsAttempted > 0
-    ? Math.round((correctCount / questionsAttempted) * 100)
-    : null;
-
-  return (
-    <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <div style={sectionLabelStyle}>This Session</div>
-      {DOMAINS.map((key) => {
-        const data = domains[key] ?? { attempted: 0, correct: 0 };
-        const filled = getDotsFilled(data);
-        return (
-          <div key={key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '11px', color: '#6b7280' }}>{key}</span>
-            <div style={{ display: 'flex', gap: 3 }}>
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: '50%',
-                  background: i < filled ? PMI_AQUA : 'transparent',
-                  border: `1.5px solid ${i < filled ? PMI_AQUA : '#d1d5db'}`,
-                }} />
-              ))}
-            </div>
-          </div>
-        );
-      })}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 2, paddingTop: 8, borderTop: '1px solid #f3f4f6' }}>
-        <span style={{ fontSize: '11px', color: '#6b7280' }}>Score</span>
-        <span style={{ fontSize: '13px', fontWeight: 600, color: score !== null ? '#200F3B' : '#d1d5db' }}>
-          {score !== null ? `${score}%` : '—'}
-        </span>
-      </div>
-    </div>
   );
 }
 
@@ -234,8 +192,8 @@ function FlashcardContext({ flashcardProgress }) {
   );
 }
 
-export default function Sidebar({ onModeSelect, currentMode, practiceProgress, tutorMeta, flashcardProgress }) {
-  const showContext = currentMode === 'Practice Questions' || (currentMode === 'Tutor Mode' && tutorMeta) || (currentMode === 'Flashcards' && flashcardProgress);
+export default function Sidebar({ onModeSelect, currentMode, tutorMeta, flashcardProgress }) {
+  const showContext = (currentMode === 'Tutor Mode' && tutorMeta) || (currentMode === 'Flashcards' && flashcardProgress);
 
   return (
     <aside style={{
@@ -269,9 +227,6 @@ export default function Sidebar({ onModeSelect, currentMode, practiceProgress, t
 
       {showContext && (
         <div style={{ borderTop: '1px solid #f3f4f6' }}>
-          {currentMode === 'Practice Questions' && practiceProgress && (
-            <PracticeContext practiceProgress={practiceProgress} />
-          )}
           {currentMode === 'Tutor Mode' && (
             <TutorContext tutorMeta={tutorMeta} />
           )}
