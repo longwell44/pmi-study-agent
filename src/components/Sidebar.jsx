@@ -132,7 +132,7 @@ function NavItem({ label, prompt, mode, icon, isActive, onModeSelect }) {
         }
       }}
     >
-      <span style={{ flexShrink: 0, opacity: isActive ? 1 : 0.65 }}>{icon}</span>
+      <span style={{ flexShrink: 0, display: 'flex', alignItems: 'center', opacity: isActive ? 1 : 0.65 }}>{icon}</span>
       {label}
     </button>
   );
