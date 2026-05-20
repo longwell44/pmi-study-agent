@@ -170,7 +170,7 @@ export default function App() {
     resetTimer();
   };
 
-  const handleSend = async (text) => {
+  const handleSend = async (text, { explicitModeSwitch = false } = {}) => {
     if (isTyping) return;
     setError(null);
 
@@ -182,7 +182,7 @@ export default function App() {
     };
 
     const newMode = detectMode(text);
-    const modeIsChanging = newMode !== 'General Study' && newMode !== currentMode;
+    const modeIsChanging = explicitModeSwitch && newMode !== 'General Study' && newMode !== currentMode;
 
     if (newMode !== 'General Study') {
       setCurrentMode(newMode);
@@ -309,7 +309,7 @@ export default function App() {
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         {screen === 'chat' && activeTab === 'study' && (
           <Sidebar
-            onModeSelect={(prompt) => { setActiveTab('study'); handleSend(prompt); }}
+            onModeSelect={(prompt) => { setActiveTab('study'); handleSend(prompt, { explicitModeSwitch: true }); }}
             currentMode={currentMode}
             practiceProgress={practiceProgress}
             tutorMeta={currentMode === 'Tutor Mode' ? tutorMeta : null}
@@ -333,7 +333,7 @@ export default function App() {
             <>
               <div style={{ flex: 1, overflowY: 'auto' }}>
                 <StarterCards
-                  onSelect={handleSend}
+                  onSelect={(text) => handleSend(text, { explicitModeSwitch: true })}
                   recommended={getRecommended(onboardingStage, onboardingStruggle)}
                   stage={onboardingStage}
                   struggle={onboardingStruggle}
