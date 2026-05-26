@@ -1,86 +1,95 @@
-const STAGE_SENTENCE = {
-  "Just starting to explore": "We've set things up to help you explore whether PMP is the right move for you.",
-  "Actively studying": "We've tailored your experience to keep your prep on track.",
-  "Exam is booked": "We've set you up to make the most of your time before exam day.",
+import { useEffect, useRef } from 'react';
+
+const STAGE_LINE = {
+  'Just starting to explore': 'Setting up your experience...',
+  'Actively studying':        'Personalizing for your study stage...',
+  'Exam is booked':           'Tailoring for your exam prep...',
 };
 
-const STRUGGLE_SENTENCE = {
-  'Understanding the concepts': "You'll get clear concept explanations before moving into practice.",
-  'Applying concepts to exam-style questions': "You'll see scenario-based practice questions front and centre.",
-  'Agile and hybrid approaches': "Agile and hybrid content will be prioritised throughout.",
-  "I'm not sure where to start": "We'll help you build a clear study plan to direct your energy.",
-};
+export default function OnboardingTransition({ stage, onContinue }) {
+  // Capture latest onContinue in a ref so the one-shot timer below
+  // never holds a stale closure — even if App re-renders (e.g. session timer)
+  // and recreates the function.
+  const onContinueRef = useRef(onContinue);
+  useEffect(() => { onContinueRef.current = onContinue; });
 
-function buildMessage(stage, struggle) {
-  const s1 = STAGE_SENTENCE[stage] ?? "We've tailored your experience based on where you are in your journey.";
-  const s2 = (struggle && STRUGGLE_SENTENCE[struggle]) ?? "You'll see recommended tools and focused content to help you prepare with confidence.";
-  return `${s1} ${s2}`;
-}
+  useEffect(() => {
+    const t = setTimeout(() => {
+      console.log('Transitioning to home...');
+      onContinueRef.current();
+    }, 1500);
+    return () => clearTimeout(t);
+  }, []); // intentionally empty — fires once on mount
 
-function CheckIcon() {
-  return (
-    <div style={{
-      width: 56,
-      height: 56,
-      borderRadius: '50%',
-      background: '#D1FAE5',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexShrink: 0,
-    }}>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <path d="M5 12l5 5 9-9" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </div>
-  );
-}
+  const line = STAGE_LINE[stage] ?? 'Personalizing your experience...';
 
-export default function OnboardingTransition({ stage, struggle, onContinue }) {
   return (
     <div style={{
       display: 'flex',
+      flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
       height: '100%',
       background: '#f9fafb',
       padding: '24px',
     }}>
+      {/* Checkmark — scales in from 0.5 */}
       <div style={{
+        width: 56,
+        height: 56,
+        borderRadius: '50%',
+        background: '#d0f5f4',
         display: 'flex',
-        flexDirection: 'column',
         alignItems: 'center',
-        textAlign: 'center',
-        maxWidth: 440,
-        gap: 20,
+        justifyContent: 'center',
+        marginBottom: 20,
+        animation: 'ob-scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
       }}>
-        <CheckIcon />
-
-        <div>
-          <h2 style={{ fontSize: '22px', fontWeight: 600, color: '#200F3B', marginBottom: 12 }}>
-            You're all set
-          </h2>
-          <p style={{ fontSize: '14px', color: '#6b7280', lineHeight: 1.6 }}>
-            {buildMessage(stage, struggle)}
-          </p>
-        </div>
-
-        <button
-          onClick={onContinue}
-          style={{
-            padding: '11px 28px',
-            borderRadius: '8px',
-            border: 'none',
-            background: '#4F17A8',
-            color: '#ffffff',
-            fontSize: '14px',
-            fontWeight: 600,
-            cursor: 'pointer',
-          }}
-        >
-          Let's get started
-        </button>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M5 12l5 5 9-9" stroke="#00A9A5" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </div>
+
+      {/* Message — fades in slightly after checkmark */}
+      <p style={{
+        fontSize: '14px',
+        color: '#6b7280',
+        margin: '0 0 28px',
+        animation: 'ob-fade-in 0.35s ease 0.25s both',
+      }}>
+        {line}
+      </p>
+
+      {/* Progress bar */}
+      <div style={{
+        width: '100%',
+        maxWidth: 300,
+        height: 3,
+        borderRadius: 2,
+        background: '#e5e7eb',
+        overflow: 'hidden',
+      }}>
+        <div style={{
+          height: '100%',
+          background: '#6B2D8B',
+          animation: 'ob-progress 1.5s linear forwards',
+        }} />
+      </div>
+
+      <style>{`
+        @keyframes ob-scale-in {
+          from { transform: scale(0.5); opacity: 0; }
+          to   { transform: scale(1);   opacity: 1; }
+        }
+        @keyframes ob-fade-in {
+          from { opacity: 0; transform: translateY(4px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes ob-progress {
+          from { width: 0%; }
+          to   { width: 100%; }
+        }
+      `}</style>
     </div>
   );
 }
