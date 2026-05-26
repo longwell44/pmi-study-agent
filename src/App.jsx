@@ -11,7 +11,7 @@ import OnboardingTransition from './components/OnboardingTransition.jsx';
 import { useSessionTimer } from './hooks/useSessionTimer.js';
 import { parseResponse, detectMode, getFollowUps } from './utils/parseResponse.js';
 import { loadProgress, recordAnswer, recordTutorSession } from './utils/progress.js';
-import MyProgress from './components/MyProgress.jsx';
+import MyDashboard from './components/MyProgress.jsx';
 import ModeEvent from './components/ModeEvent.jsx';
 
 const CONTEXT_MAP = {
@@ -325,9 +325,9 @@ export default function App() {
           background: '#f9fafb',
         }}>
           {activeTab === 'progress' ? (
-            <MyProgress
+            <MyDashboard
               onReviewMissed={handleReviewMissed}
-              onNavigate={(prompt) => { setActiveTab('study'); handleSend(prompt); }}
+              onNavigate={(prompt) => { setActiveTab('study'); handleSend(prompt, { explicitModeSwitch: true }); }}
             />
           ) : screen === 'welcome' ? (
             <>

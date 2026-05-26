@@ -107,20 +107,24 @@ app.use(cors());
 app.use(express.json({ limit: '1mb' }));
 
 app.post('/api/chat', async (req, res) => {
-  const { messages, userContext } = req.body;
+  const { messages, userContext, systemOverride } = req.body;
 
   if (!Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'messages array required' });
   }
 
-  const system = userContext
-    ? `${userContext}\n\n${SYSTEM_PROMPT}`
-    : SYSTEM_PROMPT;
+  console.log('Using system override:', !!systemOverride);
+
+  const system = systemOverride
+    ? systemOverride
+    : userContext
+      ? `${userContext}\n\n${SYSTEM_PROMPT}`
+      : SYSTEM_PROMPT;
 
   try {
     const response = await client.messages.create({
       model: 'claude-sonnet-4-6',
-      max_tokens: 2048,
+      max_tokens: 4096,
       system,
       messages,
     });

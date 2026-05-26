@@ -31,8 +31,8 @@ function TabBtn({ label, icon, isActive, onClick }) {
 
 export default function Header({ timer, onHome, activeTab, onTabChange, screen }) {
   const isProgressActive = activeTab === 'progress';
-  const isStudyActive = !isProgressActive && screen === 'chat';
-  const isOnHome = !isProgressActive && !isStudyActive;
+  const isStudyActive    = !isProgressActive && screen === 'chat';
+  const isOnHome         = !isProgressActive && !isStudyActive;
 
   return (
     <header style={{
@@ -85,7 +85,7 @@ export default function Header({ timer, onHome, activeTab, onTabChange, screen }
                 onClick={() => onTabChange('study')}
               />
               <TabBtn
-                label="My Progress"
+                label="My Dashboard"
                 isActive={isProgressActive}
                 onClick={() => onTabChange('progress')}
               />

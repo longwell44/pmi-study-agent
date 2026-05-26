@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { loadProgress, loadHistory, getDotsFilled, getStatusLabel } from '../utils/progress.js';
+import StudyPlanBuilder from './StudyPlanBuilder.jsx';
 
 const PMI_VIOLET = '#6B2D8B';
 const PMI_AQUA = '#00A9A5';
@@ -121,7 +122,136 @@ function ReadinessSnapshot({ progress }) {
   );
 }
 
-// ── Section 2: What to Focus On Next ───────────────────────────────────────
+// ── Section 2: Study Plan Card ─────────────────────────────────────────────
+const ACTIVITY_PILL = {
+  practice:   { bg: '#f1e8f7', color: PMI_VIOLET },
+  flashcards: { bg: '#e6f8f7', color: PMI_AQUA },
+  tutor:      { bg: '#fff7ed', color: '#d97706' },
+};
+
+function loadSavedPlan() {
+  try {
+    const raw = JSON.parse(localStorage.getItem('pmi-study-plan') || 'null');
+    if (!raw) return null;
+    const weeks = Array.isArray(raw) ? raw : (Array.isArray(raw.weeks) ? raw.weeks : []);
+    return weeks.length ? { planRationale: raw.planRationale ?? null, weeks } : null;
+  } catch { return null; }
+}
+
+function loadSavedProgress() {
+  try { return new Set(JSON.parse(localStorage.getItem('pmi-study-plan-progress') || '[]')); }
+  catch { return new Set(); }
+}
+
+function StudyPlanCard({ onViewPlan, onNavigate }) {
+  const plan       = loadSavedPlan();
+  const week1      = plan?.weeks?.[0] ?? null;
+  const completed  = loadSavedProgress();
+  const activities = Array.isArray(week1?.activities) ? week1.activities : [];
+  const doneCount  = activities.filter(a => completed.has(`${week1?.week ?? 1}-${a.type}`)).length;
+  const allDone    = activities.length > 0 && doneCount >= activities.length;
+
+  return (
+    <div style={cardStyle}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+        <div style={sectionHeadStyle}>Your Study Plan</div>
+        {plan && (
+          <button
+            onClick={onViewPlan}
+            style={{ fontSize: '12px', color: PMI_VIOLET, background: 'none', border: 'none', cursor: 'pointer', fontWeight: 500, padding: 0 }}
+            onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+            onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+          >
+            View full plan →
+          </button>
+        )}
+      </div>
+
+      {!week1 ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'flex-start' }}>
+          <p style={{ margin: 0, fontSize: '13px', color: '#9ca3af' }}>No study plan yet.</p>
+          <button
+            onClick={onViewPlan}
+            style={{ fontSize: '13px', color: PMI_VIOLET, background: 'none', border: 'none', cursor: 'pointer', fontWeight: 500, padding: 0 }}
+            onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+            onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+          >
+            Build your study plan →
+          </button>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {/* Week summary box */}
+          <div style={{ background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 }}>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: '#200F3B' }}>
+                Week {week1.week}{week1.title ? ` · ${week1.title}` : ''}
+              </div>
+              <div style={{
+                fontSize: '11px', fontWeight: 600, padding: '2px 8px', borderRadius: 999,
+                background: doneCount > 0 ? '#e6f8f7' : '#f3f4f6',
+                color: doneCount > 0 ? PMI_AQUA : '#9ca3af',
+                flexShrink: 0,
+              }}>
+                {doneCount} of {activities.length} done
+              </div>
+            </div>
+
+            {(week1.dates || week1.hoursPerDay) && (
+              <div style={{ fontSize: '12px', color: '#6b7280' }}>
+                {[week1.dates, week1.hoursPerDay ? `${week1.hoursPerDay}h/day` : null].filter(Boolean).join(' · ')}
+              </div>
+            )}
+
+            {activities.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                {activities.map(a => {
+                  const style = ACTIVITY_PILL[a.type] ?? { bg: '#f3f4f6', color: '#6b7280' };
+                  return (
+                    <span key={a.type} style={{
+                      fontSize: '11px', fontWeight: 500, padding: '3px 8px', borderRadius: 999,
+                      background: style.bg, color: style.color,
+                    }}>
+                      {a.label || a.type}
+                    </span>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* CTA button */}
+          {allDone ? (
+            <div style={{
+              width: '100%', padding: '11px 16px', borderRadius: '8px', textAlign: 'center',
+              background: '#e6f8f7', border: '1px solid #b2e8e7',
+              fontSize: '13.5px', fontWeight: 600, color: PMI_AQUA,
+            }}>
+              Week {week1.week} Complete ✓
+            </div>
+          ) : (
+            <button
+              onClick={() => onNavigate(
+                `Let's ${doneCount > 0 ? 'continue' : 'start'} Week ${week1.week} of my study plan: ${week1.title ?? ''}`
+              )}
+              style={{
+                width: '100%', padding: '11px 16px', borderRadius: '8px',
+                background: PMI_VIOLET, color: '#fff', border: 0,
+                fontSize: '13.5px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = '#5a2576'}
+              onMouseLeave={e => e.currentTarget.style.background = PMI_VIOLET}
+            >
+              {doneCount > 0 ? `Continue Week ${week1.week}` : `Start Week ${week1.week}`} →
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Section 3: What to Focus On Next ───────────────────────────────────────
 const URGENCY_ORDER = { red: 0, amber: 1, teal: 2 };
 const BORDER_COLOR = { red: '#dc2626', amber: '#d97706', teal: PMI_AQUA };
 
@@ -228,7 +358,7 @@ function FocusNext({ progress, flashResults, history, onNavigate }) {
   );
 }
 
-// ── Section 3: Study Activity ───────────────────────────────────────────────
+// ── Section 4: Study Activity ───────────────────────────────────────────────
 function activityParagraph(progress, history) {
   const modesUsed = [
     progress.questionsAttempted > 0,
@@ -365,10 +495,32 @@ function StudyActivity({ progress, history }) {
 }
 
 // ── Main export ─────────────────────────────────────────────────────────────
-export default function MyProgress({ onNavigate }) {
-  const progress = loadProgress();
-  const history = loadHistory();
+export default function MyDashboard({ onNavigate }) {
+  const [view, setView] = useState('dashboard');
+  const progress    = loadProgress();
+  const history     = loadHistory();
   const flashResults = loadFlashcardResults();
+
+  if (view === 'planbuilder') {
+    return (
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <div style={{
+          padding: '10px 24px', borderBottom: '1px solid #e5e7eb',
+          background: '#fff', flexShrink: 0,
+        }}>
+          <button
+            onClick={() => setView('dashboard')}
+            style={{ fontSize: '13px', color: PMI_VIOLET, background: 'none', border: 'none', cursor: 'pointer', fontWeight: 500, padding: 0, display: 'flex', alignItems: 'center', gap: 4 }}
+            onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+            onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+          >
+            ← Back to My Dashboard
+          </button>
+        </div>
+        <StudyPlanBuilder onNavigate={(prompt) => { setView('dashboard'); onNavigate(prompt); }} />
+      </div>
+    );
+  }
 
   return (
     <div style={{ flex: 1, overflowY: 'auto' }}>
@@ -381,6 +533,7 @@ export default function MyProgress({ onNavigate }) {
         gap: 20,
       }}>
         <ReadinessSnapshot progress={progress} />
+        <StudyPlanCard onViewPlan={() => setView('planbuilder')} onNavigate={onNavigate} />
         <FocusNext progress={progress} flashResults={flashResults} history={history} onNavigate={onNavigate} />
         <StudyActivity progress={progress} history={history} />
       </div>

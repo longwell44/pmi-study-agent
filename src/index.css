@@ -120,3 +120,21 @@ input, textarea {
 .starter-card:hover {
   background: #f9fafb !important;
 }
+
+/* Study Plan Builder */
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+.skel {
+  background: linear-gradient(90deg, #ececf1 0%, #f4f3f7 50%, #ececf1 100%);
+  background-size: 1200px 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: 4px;
+}
+@keyframes spb-spin {
+  to { transform: rotate(360deg); }
+}
+.spb-spin {
+  animation: spb-spin 0.9s linear infinite;
+}
