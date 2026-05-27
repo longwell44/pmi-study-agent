@@ -138,41 +138,6 @@ function NavItem({ label, prompt, mode, icon, isActive, onModeSelect }) {
   );
 }
 
-function TutorContext({ tutorMeta }) {
-  if (!tutorMeta) return null;
-  return (
-    <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <div style={sectionLabelStyle}>Current Scenario</div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-        {tutorMeta.domain && (
-          <span style={{
-            padding: '2px 8px',
-            borderRadius: '20px',
-            background: '#00A9A5',
-            color: '#ffffff',
-            fontSize: '11px',
-            fontWeight: 500,
-          }}>
-            {tutorMeta.domain}
-          </span>
-        )}
-        {tutorMeta.difficulty && (
-          <span style={{
-            padding: '2px 8px',
-            borderRadius: '20px',
-            background: '#f3f4f6',
-            color: '#6b7280',
-            fontSize: '11px',
-            fontWeight: 500,
-            border: '1px solid #e5e7eb',
-          }}>
-            {tutorMeta.difficulty}
-          </span>
-        )}
-      </div>
-    </div>
-  );
-}
 
 function FlashcardContext({ flashcardProgress }) {
   if (!flashcardProgress) return null;
@@ -192,8 +157,8 @@ function FlashcardContext({ flashcardProgress }) {
   );
 }
 
-export default function Sidebar({ onModeSelect, currentMode, tutorMeta, flashcardProgress }) {
-  const showContext = (currentMode === 'Tutor Mode' && tutorMeta) || (currentMode === 'Flashcards' && flashcardProgress);
+export default function Sidebar({ onModeSelect, currentMode, flashcardProgress }) {
+  const showContext = currentMode === 'Flashcards' && flashcardProgress;
 
   return (
     <aside style={{
@@ -227,12 +192,7 @@ export default function Sidebar({ onModeSelect, currentMode, tutorMeta, flashcar
 
       {showContext && (
         <div style={{ borderTop: '1px solid #f3f4f6' }}>
-          {currentMode === 'Tutor Mode' && (
-            <TutorContext tutorMeta={tutorMeta} />
-          )}
-          {currentMode === 'Flashcards' && (
-            <FlashcardContext flashcardProgress={flashcardProgress} />
-          )}
+          <FlashcardContext flashcardProgress={flashcardProgress} />
         </div>
       )}
 

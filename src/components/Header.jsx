@@ -29,10 +29,12 @@ function TabBtn({ label, icon, isActive, onClick }) {
 }
 
 
-export default function Header({ timer, onHome, activeTab, onTabChange, screen }) {
+export default function Header({ timer, onHome, activeTab, onTabChange, screen, userProfile }) {
   const isProgressActive = activeTab === 'progress';
-  const isStudyActive    = !isProgressActive && screen === 'chat';
-  const isOnHome         = !isProgressActive && !isStudyActive;
+  const isPlanActive     = activeTab === 'studyplan';
+  const isStudyActive    = !isProgressActive && !isPlanActive && screen === 'chat';
+  const isOnHome         = !isProgressActive && !isPlanActive && !isStudyActive;
+  const showPlanTab      = userProfile && !userProfile.skipped;
 
   return (
     <header style={{
@@ -84,8 +86,15 @@ export default function Header({ timer, onHome, activeTab, onTabChange, screen }
                 isActive={isStudyActive}
                 onClick={() => onTabChange('study')}
               />
+              {showPlanTab && (
+                <TabBtn
+                  label="My Study Plan"
+                  isActive={isPlanActive}
+                  onClick={() => onTabChange('studyplan')}
+                />
+              )}
               <TabBtn
-                label="My Dashboard"
+                label="My Learning History"
                 isActive={isProgressActive}
                 onClick={() => onTabChange('progress')}
               />

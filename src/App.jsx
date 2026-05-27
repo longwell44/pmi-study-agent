@@ -13,60 +13,46 @@ import { parseResponse, detectMode, getFollowUps } from './utils/parseResponse.j
 import { loadProgress, recordAnswer, recordTutorSession } from './utils/progress.js';
 import MyDashboard from './components/MyProgress.jsx';
 import ModeEvent from './components/ModeEvent.jsx';
-
-const CONTEXT_MAP = {
-  "Just starting to explore": {
-    _default: "The user is just beginning to explore PMP certification. Orient them to what the PMP is, who it's for, and what the exam covers. Lead with big-picture framing before any practice questions.",
-    "Understanding the concepts": "The user is exploring PMP and finds the core concepts hard to grasp. Use simple analogies, avoid jargon, and focus on PMBOK 7 principles and performance domains before any practice.",
-    "Applying concepts to exam-style questions": "The user is exploring PMP and struggles to apply concepts to real situations. Use scenario-based examples to make concepts concrete. Explain the 'why' behind each answer.",
-    "Agile and hybrid approaches": "The user is exploring PMP and finds agile and hybrid approaches confusing. Clarify the difference between predictive, agile, and hybrid. Use real project examples to ground the concepts.",
-    "I'm not sure where to start": "The user is exploring PMP and has no study plan. Begin with a clear orientation: what the exam tests, how it's structured (ECO domains), and what a realistic prep path looks like.",
-  },
-  "Actively studying": {
-    _default: "The user is actively studying for the PMP exam with the exam likely 2–6 months away. Offer a balanced mix of concept explanations, flashcards, and scenario-based practice questions. Match their pace.",
-    "Understanding the concepts": "The user is actively studying but struggles with core concepts. Prioritize clear concept explanations tied to PMBOK 7 principles and the ECO domains. Use flashcards to reinforce. Introduce practice questions only after concepts are grounded.",
-    "Applying concepts to exam-style questions": "The user is actively studying but struggles to apply knowledge to exam-style questions. Default to scenario-based practice questions. Always explain why each answer is correct or incorrect using PMI reasoning, not just facts.",
-    "Agile and hybrid approaches": "The user is actively studying and finds agile and hybrid approaches most challenging. Agile and hybrid content spans all three ECO domains and represents a major portion of the exam. Prioritize servant leadership, iteration planning, team empowerment, retrospectives, and hybrid decision-making. Lead with agile scenario questions and connect every concept to how PMI frames it in the ECO.",
-    "I'm not sure where to start": "The user is actively studying but does not know where to focus. Generate a prioritized study plan based on the three ECO domains: People (42%), Process (50%), Business Environment (8%). Recommend starting with their weakest domain and suggest a weekly study structure.",
-  },
-  "Exam is booked": {
-    _default: "The user has booked their PMP exam and is in final preparation mode — likely within 60 days. Focus exclusively on exam readiness: scenario-based practice questions, timed drills, and weak spot targeting. Do not spend time on broad orientation.",
-    "Understanding the concepts": "The user has booked their PMP exam but still struggles with core concepts. This is urgent — focus on the highest-frequency PMBOK 7 concepts that appear in exam scenarios. Connect every explanation directly to how it would be tested. Use flashcards for rapid reinforcement.",
-    "Applying concepts to exam-style questions": "The user has booked their PMP exam and struggles with scenario-based questions — the dominant question type on the PMP. Drill scenario questions relentlessly. After every answer explain the PMI mindset behind it. Help them recognize patterns in how PMI frames correct answers.",
-    "Agile and hybrid approaches": "The user has booked their PMP exam and is weakest on agile and hybrid. This is a critical gap — agile/hybrid content is heavily weighted across all ECO domains. Immediately prioritize agile scenario questions. Focus on servant leadership, adaptive planning, team dynamics, and hybrid approaches. Every session should include at least one agile scenario question.",
-    "I'm not sure where to start": "The user has booked their PMP exam and still has no clear study plan — this is urgent. Immediately generate a focused 4–8 week study plan based on ECO domain weighting. Prioritize Process (50%) and People (42%) domains. Focus on practice questions over concept reading at this stage.",
-  },
-};
-
-function buildContextString(stage, struggle) {
-  if (!stage) return null;
-  const stageMap = CONTEXT_MAP[stage];
-  if (!stageMap) return null;
-  const base = (struggle && stageMap[struggle]) || stageMap._default || '';
-  return `${base} Do not ask them to re-introduce themselves or repeat anything covered here.`;
-}
-
+import PlanReveal from './components/PlanReveal.jsx';
+import StudyPlan from './components/StudyPlan.jsx';
 
 const RECOMMENDED_MAP = {
-  "Just starting to explore": () => ['How is the PMP exam structured?', 'Explain a PMBOK concept'],
-  "Actively studying": (struggle) => {
-    const map = {
-      'Understanding the concepts':       ['Explain a PMBOK concept', 'Generate flashcards for a topic'],
-      'Applying concepts to exam-style questions':   ['Give me a practice question', 'Explain a PMBOK concept'],
-      'Agile and hybrid approaches':       ['Give me a practice question', 'Generate flashcards for a topic'],
-      "I'm not sure where to start":       ['Help me build a study plan', 'Explain a PMBOK concept'],
-    };
-    return map[struggle] ?? ['Explain a PMBOK concept', 'Give me a practice question'];
-  },
-  "Exam is booked": () => ['Give me a practice question', 'Help me build a study plan'],
+  'exam-booked': ['Give me a practice question', 'Help me build a study plan'],
+  'studying':    ['Give me a practice question', 'Help me build a study plan'],
+  'exploring':   ['Help me build a study plan', 'How is the PMP exam structured?'],
 };
 
-function getRecommended(stage, struggle) {
-  if (!stage) return [];
-  const fn = RECOMMENDED_MAP[stage];
-  return fn ? fn(struggle) : [];
+function getRecommended(userProfile) {
+  if (!userProfile || userProfile.skipped) return [];
+  return RECOMMENDED_MAP[userProfile.journeyStage] ?? [];
 }
 
+function buildContextFromProfile(profile) {
+  if (!profile) return null;
+  if (profile.skipped) {
+    return "User skipped setup. Treat all domains equally. Do not ask them to introduce themselves.";
+  }
+  const stageLabel = {
+    'exploring':  'just starting to explore PMP',
+    'studying':   'actively studying',
+    'exam-booked':'exam is booked',
+  }[profile.journeyStage] ?? profile.journeyStage;
+  const timingLabel = {
+    '30days':      '30 days',
+    '1-3mo':       '1–3 months',
+    '3-6mo':       '3–6 months',
+    'unscheduled': 'not yet scheduled',
+  }[profile.examTiming] ?? 'unknown';
+  const domains = profile.weakDomains?.length > 0
+    ? profile.weakDomains.join(', ')
+    : 'none specified';
+  const style = profile.learningStyle === 'structured'
+    ? 'structured'
+    : profile.learningStyle === 'freeform'
+      ? 'freeform exploration'
+      : 'unspecified';
+  return `User profile: journey stage is ${stageLabel}, exam is ${timingLabel} away, weakest domains are ${domains}, learning style is ${style}. Prioritise content for their weak domains. Do not ask them to re-introduce themselves.`;
+}
 
 const MODE_PLACEHOLDERS = {
   'Tutor Mode':        'Type your answer…',
@@ -77,22 +63,15 @@ const MODE_PLACEHOLDERS = {
   'Exam Overview':     'Ask a follow-up question…',
 };
 
-const MODE_DESCRIPTORS = {
-  'Tutor Mode':        "Ask me anything and I'll respond like a tutor — probing your thinking, correcting gaps, and pushing you one level deeper.",
-  'Practice Questions':"I'll give you a realistic PMP-style scenario question with four options. Select your answer and I'll explain exactly why it's right or wrong.",
-  'Flashcards':        "Pick a topic and I'll create a set of study cards you can flip through to reinforce key concepts and definitions.",
-  'Concept Review':    "Ask me about any framework, principle, or performance domain and I'll break it down clearly with real-world context.",
-  'Study Planning':    "Answer a few quick questions and I'll build you a personalized week-by-week study plan based on your timeline and weak areas.",
-  'Exam Overview':     "Learn how the exam is organized — the ECO domains, question types, scoring, and what PMI is actually testing.",
-};
-
 function getInitialState() {
   try {
-    const stage = sessionStorage.getItem('onboarding_stage');
-    const struggle = sessionStorage.getItem('onboarding_struggle');
-    if (stage) return { screen: 'welcome', stage, struggle: struggle || null };
+    const profileStr = sessionStorage.getItem('onboarding_profile');
+    if (profileStr) {
+      const profile = JSON.parse(profileStr);
+      return { screen: 'welcome', userProfile: profile };
+    }
   } catch {}
-  return { screen: 'onboarding', stage: null, struggle: null };
+  return { screen: 'onboarding', userProfile: null };
 }
 
 async function callApi(messages, userContext) {
@@ -122,17 +101,62 @@ export default function App() {
   const [isTyping, setIsTyping] = useState(false);
   const [currentMode, setCurrentMode] = useState('General Study');
   const [error, setError] = useState(null);
+  const [userProfile, setUserProfile] = useState(initial.userProfile);
   const [userContext, setUserContext] = useState(
-    initial.stage ? buildContextString(initial.stage, initial.struggle) : null
+    initial.userProfile ? buildContextFromProfile(initial.userProfile) : null
   );
-  const [onboardingStage, setOnboardingStage] = useState(initial.stage);
-  const [onboardingStruggle, setOnboardingStruggle] = useState(initial.struggle);
   const [practiceProgress, setPracticeProgress] = useState(() => loadProgress());
   const [flashcardProgress, setFlashcardProgress] = useState(null);
   const [activeTab, setActiveTab] = useState('study');
+  const [autoplan, setAutoplan] = useState({ status: 'idle', text: '' });
   const bottomRef = useRef(null);
   const lastMsgRef = useRef(null);
+  const planFetchedRef = useRef(false);
+  const hasSeenReveal = useRef(initial.userProfile != null);
   const { formatted: timer, reset: resetTimer } = useSessionTimer();
+
+  const startPlanFetch = (profile) => {
+    if (planFetchedRef.current || !profile || profile.skipped) return;
+    planFetchedRef.current = true;
+    setAutoplan({ status: 'loading', text: '' });
+
+    const stageLabel = {
+      'exploring':   'just starting to explore PMP',
+      'studying':    'actively studying',
+      'exam-booked': 'has an exam booked',
+    }[profile.journeyStage] ?? profile.journeyStage;
+
+    const timingLabel = {
+      '30days':      'within 30 days',
+      '1-3mo':       '1–3 months',
+      '3-6mo':       '3–6 months',
+      'unscheduled': 'not yet scheduled',
+    }[profile.examTiming] ?? 'unknown';
+
+    const domains = profile.weakDomains?.length > 0
+      ? profile.weakDomains.join(' and ')
+      : 'no specific domains specified';
+
+    const style = profile.learningStyle === 'structured'
+      ? 'following a structured plan'
+      : profile.learningStyle === 'freeform'
+        ? 'exploring topics freely'
+        : 'no specific preference';
+
+    const prompt = `Generate a personalised PMP study plan for someone who is ${stageLabel}, has their exam ${timingLabel} away, finds ${domains} most challenging, and prefers ${style}. Format it clearly with weeks or phases.`;
+
+    fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [{ role: 'user', content: prompt }],
+        systemOverride: "You are a PMP study plan generator. Generate a clear, personalised week-by-week study plan in plain text. Use concise headers and bullet points. Tailor it specifically to the user's profile. Do not use JSON. Do not add preamble — go straight into the plan.",
+      }),
+    })
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => setAutoplan({ status: 'done', text: data.content ?? '' }))
+      .catch(() => setAutoplan({ status: 'error', text: '' }));
+  };
 
   useEffect(() => {
     if (isTyping) {
@@ -142,29 +166,38 @@ export default function App() {
     }
   }, [messages, isTyping]);
 
-  const handleOnboardingComplete = (stage, struggle) => {
+  const handleOnboardingComplete = (profile) => {
     try {
-      sessionStorage.setItem('onboarding_stage', stage ?? '');
-      if (struggle) sessionStorage.setItem('onboarding_struggle', struggle);
+      sessionStorage.setItem('onboarding_profile', JSON.stringify(profile));
     } catch {}
-    setUserContext(buildContextString(stage, struggle));
-    setOnboardingStage(stage);
-    setOnboardingStruggle(struggle);
-    setScreen('transition');
+    setUserProfile(profile);
+    setUserContext(buildContextFromProfile(profile));
+    if (profile.skipped) {
+      setScreen('welcome');
+    } else {
+      setScreen('transition');
+    }
   };
 
   const handleTransitionComplete = () => {
-    setScreen('welcome');
+    if (!hasSeenReveal.current) {
+      hasSeenReveal.current = true;
+      startPlanFetch(userProfile);
+      setScreen('revealing');
+    } else {
+      setScreen('welcome');
+    }
   };
 
   const handleEditOnboarding = () => {
     try {
-      sessionStorage.removeItem('onboarding_stage');
-      sessionStorage.removeItem('onboarding_struggle');
+      sessionStorage.removeItem('onboarding_profile');
     } catch {}
+    hasSeenReveal.current = false;
+    planFetchedRef.current = false;
+    setAutoplan({ status: 'idle', text: '' });
     setUserContext(null);
-    setOnboardingStage(null);
-    setOnboardingStruggle(null);
+    setUserProfile(null);
     setMessages([]);
     setScreen('onboarding');
     resetTimer();
@@ -189,7 +222,7 @@ export default function App() {
       if (newMode === 'Tutor Mode' && currentMode !== 'Tutor Mode') recordTutorSession();
     }
 
-    if (screen === 'welcome') setScreen('chat');
+    if (screen === 'welcome' || screen === 'revealing') setScreen('chat');
 
     setMessages((prev) => {
       if (modeIsChanging) {
@@ -245,26 +278,28 @@ export default function App() {
   const handleTabChange = (tab) => {
     if (tab === 'progress') {
       setActiveTab('progress');
+      startPlanFetch(userProfile);
+    } else if (tab === 'studyplan') {
+      setActiveTab('studyplan');
+      if (screen === 'revealing') setScreen('welcome');
+      startPlanFetch(userProfile);
     } else if (tab === 'study') {
       setActiveTab('study');
       if (messages.length > 0) {
-        // Restore existing session
         setScreen('chat');
       } else {
-        // No session — start one immediately
         handleSend('Give me a practice question');
       }
     }
   };
 
   const lastAssistantMsg = [...messages].reverse().find(m => m.role === 'assistant');
-  const tutorMeta = (() => {
-    for (let i = messages.length - 1; i >= 0; i--) {
-      if (messages[i].parsed?.type === 'tutor_scenario') return messages[i].parsed.meta;
-    }
-    return null;
-  })();
-  const isStudyPlanActive = !isTyping && (lastAssistantMsg?.parsed?.type === 'study_plan_question' || lastAssistantMsg?.parsed?.type === 'tutor_start' || lastAssistantMsg?.parsed?.type === 'flashcard_topic' || lastAssistantMsg?.parsed?.type === 'concept_topic');
+  const isStudyPlanActive = !isTyping && (
+    lastAssistantMsg?.parsed?.type === 'study_plan_question' ||
+    lastAssistantMsg?.parsed?.type === 'tutor_start' ||
+    lastAssistantMsg?.parsed?.type === 'flashcard_topic' ||
+    lastAssistantMsg?.parsed?.type === 'concept_topic'
+  );
 
   if (!accessGranted) {
     return (
@@ -278,7 +313,7 @@ export default function App() {
   if (screen === 'onboarding') {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
-        <Header timer={timer} onHome={handleStartOver} />
+        <Header timer={timer} onHome={handleStartOver} userProfile={userProfile} />
         <Onboarding onComplete={handleOnboardingComplete} />
       </div>
     );
@@ -287,11 +322,24 @@ export default function App() {
   if (screen === 'transition') {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
-        <Header timer={timer} onHome={handleStartOver} />
+        <Header timer={timer} onHome={handleStartOver} userProfile={userProfile} />
         <OnboardingTransition
-          stage={onboardingStage}
-          struggle={onboardingStruggle}
+          stage={userProfile?.journeyStage}
           onContinue={handleTransitionComplete}
+        />
+      </div>
+    );
+  }
+
+  if (screen === 'revealing') {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
+        <Header timer={timer} onHome={handleStartOver} activeTab={activeTab} onTabChange={handleTabChange} screen={screen} userProfile={userProfile} />
+        <PlanReveal
+          userProfile={userProfile}
+          onStart={(prompt) => handleSend(prompt, { explicitModeSwitch: true })}
+          onHome={() => setScreen('welcome')}
+          onViewPlan={() => handleTabChange('studyplan')}
         />
       </div>
     );
@@ -304,15 +352,13 @@ export default function App() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
-      <Header timer={timer} onHome={handleStartOver} activeTab={activeTab} onTabChange={handleTabChange} screen={screen} />
+      <Header timer={timer} onHome={handleStartOver} activeTab={activeTab} onTabChange={handleTabChange} screen={screen} userProfile={userProfile} />
 
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         {screen === 'chat' && activeTab === 'study' && (
           <Sidebar
             onModeSelect={(prompt) => { setActiveTab('study'); handleSend(prompt, { explicitModeSwitch: true }); }}
             currentMode={currentMode}
-            practiceProgress={practiceProgress}
-            tutorMeta={currentMode === 'Tutor Mode' ? tutorMeta : null}
             flashcardProgress={currentMode === 'Flashcards' ? flashcardProgress : null}
           />
         )}
@@ -324,20 +370,29 @@ export default function App() {
           overflow: 'hidden',
           background: '#f9fafb',
         }}>
-          {activeTab === 'progress' ? (
+          {activeTab === 'studyplan' ? (
+            <StudyPlan
+              autoplan={autoplan}
+              userProfile={userProfile}
+              onStart={(prompt) => { setActiveTab('study'); handleSend(prompt, { explicitModeSwitch: true }); }}
+            />
+          ) : activeTab === 'progress' ? (
             <MyDashboard
               onReviewMissed={handleReviewMissed}
               onNavigate={(prompt) => { setActiveTab('study'); handleSend(prompt, { explicitModeSwitch: true }); }}
+              userProfile={userProfile}
+              onOpenOnboarding={handleEditOnboarding}
+              autoplan={autoplan}
             />
           ) : screen === 'welcome' ? (
             <>
               <div style={{ flex: 1, overflowY: 'auto' }}>
                 <StarterCards
                   onSelect={(text) => handleSend(text, { explicitModeSwitch: true })}
-                  recommended={getRecommended(onboardingStage, onboardingStruggle)}
-                  stage={onboardingStage}
-                  struggle={onboardingStruggle}
+                  recommended={getRecommended(userProfile)}
+                  userProfile={userProfile}
                   onEdit={handleEditOnboarding}
+                  onViewDashboard={() => handleTabChange('progress')}
                 />
               </div>
               <MessageInput onSend={handleSend} disabled={isTyping} maxWidth={820} placeholder={MODE_PLACEHOLDERS[currentMode] ?? 'Ask anything about the PMP exam…'} />
@@ -345,8 +400,6 @@ export default function App() {
           ) : (
             <>
               <div style={{ flex: 1, overflowY: 'auto' }}>
-
-                {/* Chat messages */}
                 <div style={{
                   maxWidth: '960px',
                   margin: '0 auto',
@@ -379,9 +432,7 @@ export default function App() {
                   )}
                   <div ref={bottomRef} />
                 </div>
-
               </div>
-
               {!isStudyPlanActive && <MessageInput onSend={handleSend} disabled={isTyping} placeholder={MODE_PLACEHOLDERS[currentMode] ?? 'Ask anything about the PMP exam…'} />}
             </>
           )}

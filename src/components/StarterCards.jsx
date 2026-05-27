@@ -57,19 +57,6 @@ const SECTIONS = [
         description: 'Deep dives into frameworks, principles, and performance domains',
       },
       {
-        accent: { bg: '#FDE8F0', stroke: '#DB2777' },
-        icon: (stroke) => (
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2"/>
-            <line x1="16" y1="2" x2="16" y2="6"/>
-            <line x1="8" y1="2" x2="8" y2="6"/>
-            <line x1="3" y1="10" x2="21" y2="10"/>
-          </svg>
-        ),
-        label: 'Help me build a study plan',
-        description: 'Get a personalized roadmap to PMP exam readiness',
-      },
-      {
         accent: { bg: '#E8F1FD', stroke: '#2563EB' },
         icon: (stroke) => (
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -88,7 +75,51 @@ const SECTIONS = [
   },
 ];
 
-export default function StarterCards({ onSelect, recommended = [], stage, struggle, onEdit }) {
+const TIMING_LABELS = {
+  '30days':      'Exam in 30 days',
+  '1-3mo':       '1–3 months to exam',
+  '3-6mo':       '3–6 months to exam',
+  'unscheduled': 'Exam not yet scheduled',
+};
+
+function getWeekRange() {
+  const today = new Date();
+  const dow = today.getDay();
+  const mon = new Date(today);
+  mon.setDate(today.getDate() - (dow === 0 ? 6 : dow - 1));
+  const sun = new Date(mon);
+  sun.setDate(mon.getDate() + 6);
+  const fmt = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return `${fmt(mon)} – ${fmt(sun)}`;
+}
+
+function buildWeekTasks(profile) {
+  const domain = profile.weakDomains?.[0] ?? 'People';
+  return [
+    {
+      domain,
+      task: `20 practice questions — ${domain} fundamentals`,
+      time: '~30 min',
+      prompt: `Give me a practice question on ${domain}`,
+    },
+    {
+      domain,
+      task: 'Tutor session — scenario reasoning',
+      time: '~25 min',
+      prompt: 'Help me study for the PMP',
+    },
+    {
+      domain: 'PMBOK 7',
+      task: 'Read Ch. 4–5 · Core frameworks',
+      time: '~45 min',
+      prompt: 'Explain a PMBOK concept',
+    },
+  ];
+}
+
+export default function StarterCards({ onSelect, recommended = [], userProfile, onEdit, onViewDashboard }) {
+  const hasProfile = userProfile && !userProfile.skipped;
+
   return (
     <div style={{
       minHeight: '100%',
@@ -114,44 +145,156 @@ export default function StarterCards({ onSelect, recommended = [], stage, strugg
         </p>
       </div>
 
-      {stage && (
+      {!hasProfile && (
         <div style={{
-          background: '#F5F3FF',
-          border: '1px solid #d1d5db',
-          borderLeft: '3px solid #7C3AED',
+          background: '#fafafa',
+          border: '1px solid #e5e7eb',
           borderRadius: '8px',
-          padding: '8px 16px',
+          padding: '12px 16px',
           maxWidth: 820,
           width: '100%',
-          textAlign: 'center',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
-          gap: 8,
+          justifyContent: 'space-between',
+          gap: 12,
         }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            <path d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11" />
-          </svg>
           <span style={{ fontSize: '13px', color: '#6b7280' }}>
-            Recommendations based on: <span style={{ fontWeight: 500 }}>Stage:</span> {stage}
-            {struggle && <> · <span style={{ fontWeight: 500 }}>Focus:</span> {struggle}</>}
-            {' · '}
-            <button
-              onClick={onEdit}
+            Complete your setup to get a personalised study plan
+          </span>
+          <button
+            onClick={onEdit}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#4F17A8',
+              fontSize: '13px',
+              fontWeight: 500,
+              cursor: 'pointer',
+              padding: 0,
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+              fontFamily: 'inherit',
+            }}
+            onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+            onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+          >
+            Complete your setup →
+          </button>
+        </div>
+      )}
+
+      {hasProfile && (
+        <div style={{
+          background: '#ffffff',
+          border: '1px solid #e5e7eb',
+          borderLeft: '3px solid #4F17A8',
+          borderRadius: '8px',
+          maxWidth: 820,
+          width: '100%',
+          overflow: 'hidden',
+        }}>
+          {/* Header row */}
+          <div style={{
+            padding: '13px 20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderBottom: '1px solid #f3f4f6',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{
+                width: 20, height: 20, borderRadius: '50%',
+                background: '#4F17A8',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+              </div>
+              <span style={{ fontSize: '11px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', letterSpacing: '0.7px' }}>
+                This week
+              </span>
+              <span style={{ fontSize: '12px', color: '#9ca3af' }}>{getWeekRange()}</span>
+            </div>
+            <span style={{ fontSize: '12px', color: '#9ca3af' }}>0 / 3 done</span>
+          </div>
+
+          {/* Task rows */}
+          {buildWeekTasks(userProfile).map((item, i, arr) => (
+            <div
+              key={i}
               style={{
-                background: 'none',
-                border: 'none',
-                color: '#6b7280',
-                fontSize: '13px',
-                cursor: 'pointer',
-                padding: 0,
-                textDecoration: 'underline',
+                padding: '12px 20px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                borderBottom: i < arr.length - 1 ? '1px solid #f3f4f6' : 'none',
               }}
             >
-              Edit
+              <span style={{
+                fontSize: '11px', fontWeight: 600,
+                color: '#6B2D8B', background: '#EDE9FF',
+                padding: '2px 8px', borderRadius: '10px',
+                whiteSpace: 'nowrap', flexShrink: 0,
+              }}>
+                {item.domain}
+              </span>
+              <span style={{ flex: 1, fontSize: '13px', color: '#374151', minWidth: 0 }}>
+                {item.task}
+              </span>
+              <span style={{
+                fontSize: '11px', color: '#9ca3af', background: '#f3f4f6',
+                padding: '2px 8px', borderRadius: '10px',
+                whiteSpace: 'nowrap', flexShrink: 0,
+              }}>
+                {item.time}
+              </span>
+              <button
+                onClick={() => onSelect(item.prompt)}
+                style={{
+                  background: 'none', border: 'none', padding: 0,
+                  color: '#4F17A8', fontSize: '13px', fontWeight: 600,
+                  cursor: 'pointer', fontFamily: 'inherit',
+                  whiteSpace: 'nowrap', flexShrink: 0,
+                }}
+                onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+                onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+              >
+                Start →
+              </button>
+            </div>
+          ))}
+
+          {/* Footer row */}
+          <div style={{
+            padding: '11px 20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderTop: '1px solid #f3f4f6',
+            gap: 12,
+          }}>
+            <span style={{ fontSize: '12px', color: '#9ca3af', minWidth: 0 }}>
+              {[
+                userProfile.weakDomains?.length > 0 && `Focus: ${userProfile.weakDomains.join(' & ')}`,
+                TIMING_LABELS[userProfile.examTiming],
+              ].filter(Boolean).join(' · ')}
+            </span>
+            <button
+              onClick={onViewDashboard}
+              style={{
+                background: 'none', border: 'none', padding: 0,
+                color: '#4F17A8', fontSize: '12px', fontWeight: 500,
+                cursor: 'pointer', fontFamily: 'inherit',
+                whiteSpace: 'nowrap', flexShrink: 0,
+              }}
+              onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+              onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+            >
+              View full plan →
             </button>
-          </span>
+          </div>
         </div>
       )}
 

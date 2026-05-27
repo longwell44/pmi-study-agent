@@ -2,8 +2,11 @@ import { useEffect, useRef } from 'react';
 
 const STAGE_LINE = {
   'Just starting to explore': 'Setting up your experience...',
+  'exploring':                'Setting up your experience...',
   'Actively studying':        'Personalizing for your study stage...',
+  'studying':                 'Personalizing for your study stage...',
   'Exam is booked':           'Tailoring for your exam prep...',
+  'exam-booked':              'Tailoring for your exam prep...',
 };
 
 export default function OnboardingTransition({ stage, onContinue }) {
