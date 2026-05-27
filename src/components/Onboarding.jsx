@@ -330,7 +330,7 @@ export default function Onboarding({ onComplete }) {
           </p>
 
           <p style={{ fontSize: '12px', color: '#9ca3af', textAlign: 'center', marginBottom: 24 }}>
-            ⏱ About 30 seconds &nbsp;·&nbsp; 4 questions
+            ⏱ About 20 seconds &nbsp;·&nbsp; 2 questions
           </p>
 
           <button
@@ -399,17 +399,17 @@ export default function Onboarding({ onComplete }) {
           <h2 style={{ fontSize: '20px', fontWeight: 700, color: '#200F3B', marginBottom: 8, lineHeight: 1.3 }}>
             Here's what we already know, John
           </h2>
-          <p style={{ fontSize: '13px', color: '#6b7280', marginBottom: 24, lineHeight: 1.6 }}>
+          <p style={{ fontSize: '13px', color: '#6b7280', marginBottom: 16, lineHeight: 1.6 }}>
             We've pulled the basics from your PMI profile — just confirm it still looks right.
           </p>
 
-          <div style={{ border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden', marginBottom: 24 }}>
+          <div style={{ border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden', marginBottom: 20 }}>
             {PMI_PROFILE_ROWS.map((row, i, arr) => (
               <div key={row.label} style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: 12,
-                padding: '13px 16px',
+                padding: '10px 16px',
                 borderBottom: i < arr.length - 1 ? '1px solid #f3f4f6' : 'none',
                 background: '#ffffff',
               }}>
@@ -436,7 +436,7 @@ export default function Onboarding({ onComplete }) {
             ))}
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
             <div style={{ flex: 1, height: 1, background: '#e5e7eb' }} />
             <span style={{ fontSize: '12px', color: '#9ca3af', whiteSpace: 'nowrap' }}>
               Just 2 more questions to personalise your plan

@@ -116,12 +116,16 @@ function TaskCard({ task, onStart }) {
         <button
           onClick={() => onStart(task.prompt)}
           style={{
-            background: 'none', border: 'none', padding: 0,
-            color: PMI_VIOLET, fontSize: '13px', fontWeight: 600,
+            background: 'none',
+            border: `1px solid ${PMI_VIOLET}`,
+            borderRadius: '5px',
+            padding: '4px 10px',
+            color: PMI_VIOLET, fontSize: '12px', fontWeight: 600,
             cursor: 'pointer', fontFamily: 'inherit',
+            transition: 'background 0.15s',
           }}
-          onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
-          onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+          onMouseEnter={e => e.currentTarget.style.background = '#EDE9FF'}
+          onMouseLeave={e => e.currentTarget.style.background = 'none'}
         >
           Start →
         </button>
@@ -165,8 +169,8 @@ function PhaseCard({ phase }) {
         <span style={{
           fontSize: '11px', fontWeight: 600, flexShrink: 0,
           padding: '3px 10px', borderRadius: '10px',
-          background: isCurrent ? PMI_VIOLET : '#f3f4f6',
-          color: isCurrent ? '#ffffff' : '#9ca3af',
+          background: isCurrent ? '#EDE9FF' : '#f3f4f6',
+          color: isCurrent ? PMI_VIOLET : '#9ca3af',
         }}>
           {isCurrent ? 'Current phase' : isLocked ? 'Locked' : 'Up next'}
         </span>
@@ -228,22 +232,10 @@ export default function PlanReveal({ userProfile, onStart, onHome, onViewPlan, o
               {totalWeeks}-week plan · Generated today · {focusLabel}
             </p>
           </div>
-          <button
-            onClick={onRegenerate}
-            style={{
-              background: 'none', border: 'none', padding: 0,
-              color: '#9ca3af', fontSize: '13px',
-              cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0, marginTop: 6,
-            }}
-            onMouseEnter={e => e.currentTarget.style.color = '#6b7280'}
-            onMouseLeave={e => e.currentTarget.style.color = '#9ca3af'}
-          >
-            Regenerate
-          </button>
         </div>
 
         {/* ── THIS WEEK ── */}
-        <div style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '20px 24px' }}>
+        <div style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderLeft: '3px solid #4F17A8', borderRadius: '8px', padding: '20px 24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
               <span style={{ fontSize: '11px', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.7px' }}>

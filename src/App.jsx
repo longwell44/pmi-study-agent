@@ -13,7 +13,6 @@ import { parseResponse, detectMode, getFollowUps } from './utils/parseResponse.j
 import { loadProgress, recordAnswer, recordTutorSession } from './utils/progress.js';
 import MyDashboard from './components/MyProgress.jsx';
 import ModeEvent from './components/ModeEvent.jsx';
-import PlanReveal from './components/PlanReveal.jsx';
 import StudyPlan from './components/StudyPlan.jsx';
 
 const RECOMMENDED_MAP = {
@@ -118,7 +117,6 @@ export default function App() {
   const bottomRef = useRef(null);
   const lastMsgRef = useRef(null);
   const planFetchedRef = useRef(false);
-  const hasSeenReveal = useRef(initial.userProfile != null);
   const { formatted: timer, reset: resetTimer } = useSessionTimer();
 
   const startPlanFetch = (profile) => {
@@ -188,20 +186,15 @@ export default function App() {
   };
 
   const handleTransitionComplete = () => {
-    if (!hasSeenReveal.current) {
-      hasSeenReveal.current = true;
-      startPlanFetch(userProfile);
-      setScreen('revealing');
-    } else {
-      setScreen('welcome');
-    }
+    startPlanFetch(userProfile);
+    setScreen('welcome');
+    setActiveTab('studyplan');
   };
 
   const handleEditOnboarding = () => {
     try {
       sessionStorage.removeItem('onboarding_profile');
     } catch {}
-    hasSeenReveal.current = false;
     planFetchedRef.current = false;
     setAutoplan({ status: 'idle', text: '' });
     setUserContext(null);
@@ -230,7 +223,7 @@ export default function App() {
       if (newMode === 'Tutor Mode' && currentMode !== 'Tutor Mode') recordTutorSession();
     }
 
-    if (screen === 'welcome' || screen === 'revealing') setScreen('chat');
+    if (screen === 'welcome') setScreen('chat');
 
     setMessages((prev) => {
       if (modeIsChanging) {
@@ -289,7 +282,6 @@ export default function App() {
       startPlanFetch(userProfile);
     } else if (tab === 'studyplan') {
       setActiveTab('studyplan');
-      if (screen === 'revealing') setScreen('welcome');
       startPlanFetch(userProfile);
     } else if (tab === 'study') {
       setActiveTab('study');
@@ -334,20 +326,6 @@ export default function App() {
         <OnboardingTransition
           stage={userProfile?.journeyStage}
           onContinue={handleTransitionComplete}
-        />
-      </div>
-    );
-  }
-
-  if (screen === 'revealing') {
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
-        <Header timer={timer} onHome={handleStartOver} activeTab={activeTab} onTabChange={handleTabChange} screen={screen} userProfile={userProfile} />
-        <PlanReveal
-          userProfile={userProfile}
-          onStart={(prompt) => handleSend(prompt, { explicitModeSwitch: true })}
-          onHome={() => setScreen('welcome')}
-          onViewPlan={() => handleTabChange('studyplan')}
         />
       </div>
     );
@@ -400,7 +378,7 @@ export default function App() {
                   recommended={getRecommended(userProfile)}
                   userProfile={userProfile}
                   onEdit={handleEditOnboarding}
-                  onViewDashboard={() => handleTabChange('progress')}
+                  onViewDashboard={() => handleTabChange('studyplan')}
                 />
               </div>
               <MessageInput onSend={handleSend} disabled={isTyping} maxWidth={820} placeholder={MODE_PLACEHOLDERS[currentMode] ?? 'Ask anything about the PMP exam…'} />
