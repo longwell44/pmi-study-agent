@@ -1,18 +1,5 @@
 import { useState } from 'react';
 
-const JOURNEY_OPTIONS = [
-  { label: 'Just starting to explore', value: 'exploring' },
-  { label: 'Actively studying',         value: 'studying' },
-  { label: 'Exam is booked',            value: 'exam-booked' },
-];
-
-const TIMING_OPTIONS = [
-  { label: 'Within 30 days',    value: '30days' },
-  { label: '1–3 months away',   value: '1-3mo' },
-  { label: '3–6 months away',   value: '3-6mo' },
-  { label: 'Not scheduled yet', value: 'unscheduled' },
-];
-
 const DOMAIN_OPTIONS = [
   { label: 'People',               value: 'People' },
   { label: 'Process',              value: 'Process' },
@@ -44,6 +31,89 @@ const STYLE_CARDS = [
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10"/>
         <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+      </svg>
+    ),
+  },
+];
+
+const PMI_PROFILE_ROWS = [
+  {
+    label: 'Certification pursuing',
+    value: 'PMP',
+    isStatus: false,
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4F17A8" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="8" r="6"/>
+        <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'Application status',
+    value: 'Approved & eligible',
+    isStatus: true,
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4F17A8" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'Exam date',
+    value: 'Aug 15, 2026',
+    isStatus: false,
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4F17A8" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'Role',
+    value: 'IT Project Manager',
+    isStatus: false,
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4F17A8" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+        <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'Industry',
+    value: 'Technology',
+    isStatus: false,
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4F17A8" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/>
+        <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/>
+        <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/>
+        <path d="M10 6h4M10 10h4M10 14h4M10 18h4"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'Member since',
+    value: '2021',
+    isStatus: false,
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4F17A8" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'Certifications held',
+    value: 'CAPM',
+    isStatus: false,
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4F17A8" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
       </svg>
     ),
   },
@@ -118,24 +188,30 @@ function SkipLink({ onClick }) {
         onMouseEnter={e => e.currentTarget.style.color = '#6b7280'}
         onMouseLeave={e => e.currentTarget.style.color = '#9ca3af'}
       >
-        Skip setup
+        Do this later
       </button>
     </div>
   );
 }
 
 function StepDots({ current }) {
+  const total = 3;
   return (
-    <div style={{ display: 'flex', gap: 6, marginBottom: 32 }}>
-      {[2, 3, 4, 5].map((n) => (
-        <div key={n} style={{
-          width: 6,
-          height: 6,
-          borderRadius: '50%',
-          background: n <= current ? '#4F17A8' : '#e5e7eb',
-          transition: 'background 0.2s',
-        }} />
-      ))}
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
+      <div style={{ display: 'flex', gap: 6 }}>
+        {Array.from({ length: total }, (_, i) => (
+          <div key={i} style={{
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            background: i < current ? '#4F17A8' : '#e5e7eb',
+            transition: 'background 0.2s',
+          }} />
+        ))}
+      </div>
+      <span style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 500, fontFamily: 'inherit' }}>
+        {String(current).padStart(2, '0')} / {String(total).padStart(2, '0')}
+      </span>
     </div>
   );
 }
@@ -186,8 +262,6 @@ const cardStyle = {
 
 export default function Onboarding({ onComplete }) {
   const [screen, setScreen] = useState(1);
-  const [journeyStage, setJourneyStage] = useState(null);
-  const [examTiming, setExamTiming] = useState(null);
   const [weakDomains, setWeakDomains] = useState([]);
   const [notSureSelected, setNotSureSelected] = useState(false);
   const [learningStyle, setLearningStyle] = useState(null);
@@ -202,10 +276,17 @@ export default function Onboarding({ onComplete }) {
 
   const complete = () => onComplete({
     skipped: false,
-    journeyStage,
-    examTiming,
     weakDomains,
     learningStyle,
+    examDate: 'Aug 15, 2026',
+    examTiming: '3-6mo',
+    journeyStage: 'studying',
+    role: 'IT Project Manager',
+    industry: 'Technology',
+    memberSince: '2021',
+    existingCerts: ['CAPM'],
+    certPursuing: 'PMP',
+    applicationStatus: 'approved',
   });
 
   const toggleDomain = (value) => {
@@ -294,73 +375,88 @@ export default function Onboarding({ onComplete }) {
     );
   }
 
-  // Screen 2: Journey stage
+  // Screen 2: myPMI profile confirmation
   if (screen === 2) {
     return (
-      <div style={pageStyle}>
-        <div style={cardStyle}>
-          <StepDots current={2} />
-          <BackBtn onClick={() => setScreen(1)} />
-          <h2 style={{ fontSize: '20px', fontWeight: 600, color: '#200F3B', marginBottom: 8 }}>
-            Where are you in your PMP journey?
+      <div style={{ ...pageStyle, alignItems: 'flex-start', overflowY: 'auto' }}>
+        <div style={{ ...cardStyle, maxWidth: '540px', margin: '0 auto' }}>
+          <StepDots current={1} />
+
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            background: '#EDE9FF', borderRadius: '20px',
+            padding: '5px 12px', marginBottom: 20,
+          }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4F17A8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+            <span style={{ fontSize: '11px', fontWeight: 700, color: '#4F17A8', textTransform: 'uppercase', letterSpacing: '0.7px' }}>
+              FROM YOUR PMI ACCOUNT
+            </span>
+          </div>
+
+          <h2 style={{ fontSize: '20px', fontWeight: 700, color: '#200F3B', marginBottom: 8, lineHeight: 1.3 }}>
+            Here's what we already know, John
           </h2>
-          <p style={{ fontSize: '13px', color: '#6b7280', marginBottom: 28, lineHeight: 1.5 }}>
-            Your answer helps us recommend the right tools and focus areas straight away.
+          <p style={{ fontSize: '13px', color: '#6b7280', marginBottom: 24, lineHeight: 1.6 }}>
+            We've pulled the basics from your PMI profile — just confirm it still looks right.
           </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 32 }}>
-            {JOURNEY_OPTIONS.map(({ label, value }) => (
-              <Chip
-                key={value}
-                label={label}
-                selected={journeyStage === value}
-                onClick={() => setJourneyStage(value)}
-              />
+
+          <div style={{ border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden', marginBottom: 24 }}>
+            {PMI_PROFILE_ROWS.map((row, i, arr) => (
+              <div key={row.label} style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                padding: '13px 16px',
+                borderBottom: i < arr.length - 1 ? '1px solid #f3f4f6' : 'none',
+                background: '#ffffff',
+              }}>
+                <div style={{
+                  width: 30, height: 30, borderRadius: '7px',
+                  background: '#EDE9FF',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
+                  {row.icon}
+                </div>
+                <span style={{ flex: 1, fontSize: '13px', color: '#6b7280' }}>{row.label}</span>
+                {row.isStatus ? (
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '13px', fontWeight: 600, color: '#059669' }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                    {row.value}
+                  </span>
+                ) : (
+                  <span style={{ fontSize: '13px', fontWeight: 700, color: '#200F3B' }}>{row.value}</span>
+                )}
+              </div>
             ))}
           </div>
-          <PrimaryBtn onClick={() => setScreen(3)} disabled={!journeyStage} label="Next" />
-          <SkipLink onClick={skip} />
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
+            <div style={{ flex: 1, height: 1, background: '#e5e7eb' }} />
+            <span style={{ fontSize: '12px', color: '#9ca3af', whiteSpace: 'nowrap' }}>
+              Just 2 more questions to personalise your plan
+            </span>
+            <div style={{ flex: 1, height: 1, background: '#e5e7eb' }} />
+          </div>
+
+          <PrimaryBtn onClick={() => setScreen(3)} disabled={false} label="Continue →" />
         </div>
       </div>
     );
   }
 
-  // Screen 3: Exam timing
+  // Screen 3: Weak domains
   if (screen === 3) {
     return (
       <div style={pageStyle}>
         <div style={cardStyle}>
-          <StepDots current={3} />
+          <StepDots current={2} />
           <BackBtn onClick={() => setScreen(2)} />
-          <h2 style={{ fontSize: '20px', fontWeight: 600, color: '#200F3B', marginBottom: 8 }}>
-            When is your exam?
-          </h2>
-          <p style={{ fontSize: '13px', color: '#6b7280', marginBottom: 28, lineHeight: 1.5 }}>
-            This helps us tailor the plan length and pacing to your timeline.
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 32 }}>
-            {TIMING_OPTIONS.map(({ label, value }) => (
-              <Chip
-                key={value}
-                label={label}
-                selected={examTiming === value}
-                onClick={() => setExamTiming(value)}
-              />
-            ))}
-          </div>
-          <PrimaryBtn onClick={() => setScreen(4)} disabled={!examTiming} label="Next" />
-          <SkipLink onClick={skip} />
-        </div>
-      </div>
-    );
-  }
-
-  // Screen 4: Weak domains (multi-select, up to 2)
-  if (screen === 4) {
-    return (
-      <div style={pageStyle}>
-        <div style={cardStyle}>
-          <StepDots current={4} />
-          <BackBtn onClick={() => setScreen(3)} />
           <h2 style={{ fontSize: '20px', fontWeight: 600, color: '#200F3B', marginBottom: 8 }}>
             Which domains feel weakest right now?
           </h2>
@@ -382,19 +478,19 @@ export default function Onboarding({ onComplete }) {
               );
             })}
           </div>
-          <PrimaryBtn onClick={() => setScreen(5)} disabled={false} label="Next" />
+          <PrimaryBtn onClick={() => setScreen(4)} disabled={false} label="Next" />
           <SkipLink onClick={skip} />
         </div>
       </div>
     );
   }
 
-  // Screen 5: Learning style
+  // Screen 4: Learning style
   return (
     <div style={pageStyle}>
       <div style={cardStyle}>
-        <StepDots current={5} />
-        <BackBtn onClick={() => setScreen(4)} />
+        <StepDots current={3} />
+        <BackBtn onClick={() => setScreen(3)} />
         <h2 style={{ fontSize: '20px', fontWeight: 600, color: '#200F3B', marginBottom: 8 }}>
           How do you prefer to study?
         </h2>
@@ -482,7 +578,7 @@ export default function Onboarding({ onComplete }) {
             onMouseEnter={e => e.currentTarget.style.color = '#200F3B'}
             onMouseLeave={e => e.currentTarget.style.color = '#6b7280'}
           >
-            Skip for now
+            Do this later
           </button>
         </div>
       </div>

@@ -32,11 +32,15 @@ function buildContextFromProfile(profile) {
   if (profile.skipped) {
     return "User skipped setup. Treat all domains equally. Do not ask them to introduce themselves.";
   }
-  const stageLabel = {
-    'exploring':  'just starting to explore PMP',
-    'studying':   'actively studying',
-    'exam-booked':'exam is booked',
-  }[profile.journeyStage] ?? profile.journeyStage;
+
+  const parts = [];
+  if (profile.role && profile.industry) parts.push(`User is a ${profile.role} in the ${profile.industry} industry`);
+  if (profile.memberSince) parts.push(`PMI member since ${profile.memberSince}`);
+  if (profile.existingCerts?.length) parts.push(`holds ${profile.existingCerts.join(', ')}`);
+  if (profile.certPursuing) parts.push(`pursuing ${profile.certPursuing}`);
+  if (profile.applicationStatus === 'approved') parts.push('application approved');
+  if (profile.examDate) parts.push(`exam booked for ${profile.examDate}`);
+
   const timingLabel = {
     '30days':      '30 days',
     '1-3mo':       '1–3 months',
@@ -51,7 +55,9 @@ function buildContextFromProfile(profile) {
     : profile.learningStyle === 'freeform'
       ? 'freeform exploration'
       : 'unspecified';
-  return `User profile: journey stage is ${stageLabel}, exam is ${timingLabel} away, weakest domains are ${domains}, learning style is ${style}. Prioritise content for their weak domains. Do not ask them to re-introduce themselves.`;
+
+  const profileSentence = parts.length > 0 ? `${parts.join(', ')}. ` : '';
+  return `${profileSentence}Exam is ${timingLabel} away. Weakest domains are ${domains}. Learning style is ${style}. Prioritise content for their weak domains. Do not ask them to re-introduce themselves.`;
 }
 
 const MODE_PLACEHOLDERS = {
@@ -120,19 +126,6 @@ export default function App() {
     planFetchedRef.current = true;
     setAutoplan({ status: 'loading', text: '' });
 
-    const stageLabel = {
-      'exploring':   'just starting to explore PMP',
-      'studying':    'actively studying',
-      'exam-booked': 'has an exam booked',
-    }[profile.journeyStage] ?? profile.journeyStage;
-
-    const timingLabel = {
-      '30days':      'within 30 days',
-      '1-3mo':       '1–3 months',
-      '3-6mo':       '3–6 months',
-      'unscheduled': 'not yet scheduled',
-    }[profile.examTiming] ?? 'unknown';
-
     const domains = profile.weakDomains?.length > 0
       ? profile.weakDomains.join(' and ')
       : 'no specific domains specified';
@@ -143,7 +136,22 @@ export default function App() {
         ? 'exploring topics freely'
         : 'no specific preference';
 
-    const prompt = `Generate a personalised PMP study plan for someone who is ${stageLabel}, has their exam ${timingLabel} away, finds ${domains} most challenging, and prefers ${style}. Format it clearly with weeks or phases.`;
+    const backgroundInfo = profile.role && profile.industry
+      ? `a ${profile.role} in the ${profile.industry} industry`
+      : 'a PMP candidate';
+    const certInfo = profile.existingCerts?.length
+      ? `, holding ${profile.existingCerts.join(', ')}`
+      : '';
+    const examInfo = profile.examDate
+      ? `exam on ${profile.examDate}`
+      : {
+          '30days':      'exam within 30 days',
+          '1-3mo':       'exam 1–3 months away',
+          '3-6mo':       'exam 3–6 months away',
+          'unscheduled': 'exam not yet scheduled',
+        }[profile.examTiming] ?? 'exam date unknown';
+
+    const prompt = `Generate a personalised PMP study plan for ${backgroundInfo}${certInfo}, with ${examInfo}, finding ${domains} most challenging, and preferring ${style}. Format it clearly with weeks or phases.`;
 
     fetch('/api/chat', {
       method: 'POST',
